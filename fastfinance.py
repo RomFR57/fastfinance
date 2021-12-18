@@ -1,6 +1,5 @@
 import numpy as np
 from numba import jit, types
-from numba.core.errors import TypingError
 from numba.extending import overload
 from numba.np import linalg
 from math import fabs
