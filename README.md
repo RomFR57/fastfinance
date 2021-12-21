@@ -11,6 +11,7 @@ Indicators:
 - Bollinger Bands
 - Ichimoku Cloud
 - Heinken Ashi
+- Volume Profile
 
 Requirements:
 ```python
