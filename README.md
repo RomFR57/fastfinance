@@ -2,12 +2,12 @@
 Financial Indicators speed up with Numba
 
 Indicators:
-- Simple Moving Average
-- Exponential Moving Average
-- Triple Exponential Moving Avergage
-- Relative Strengh Index
-- Stochastic Relative Strengh Index
-- Moving Average Convergence Divergence
+- Simple Moving Average (SMA)
+- Exponential Moving Average (EMA)
+- Triple Exponential Moving Avergage (TRIX)
+- Relative Strengh Index (RSI)
+- Stochastic Relative Strengh Index (S-RSI)
+- Moving Average Convergence Divergence (MACD)
 - Bollinger Bands
 - Ichimoku
 - Heinken Ashi
