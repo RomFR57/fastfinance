@@ -8,6 +8,7 @@ Indicators :
 - Triple Exponential Moving Avergage (TRIX)
 - Relative Strengh Index (RSI)
 - Stochastic Relative Strengh Index (S-RSI)
+- Stochastic
 - Moving Average Convergence Divergence (MACD)
 - Bollinger Bands
 - Ichimoku
