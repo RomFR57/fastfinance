@@ -218,3 +218,24 @@ def ichimoku(data, tenkansen=9, kinjunsen=26, senkou_b=52, shift=26):
     n_senkou_a = np.concatenate((np.array([np.nan] * shift), ((n_tenkansen + n_kinjunsen) / 2)))
     n_senkou_b = max_plus_min_div_2(data, senkou_b, shift)
     return n_tenkansen, n_kinjunsen, n_chikou, n_senkou_a, n_senkou_b
+
+
+@jit(nopython=True, cache=True)
+def volume_profile(c_close, c_volume, bins=10):
+    """
+    Volume Profile
+    :type c_close: np.ndarray
+    :type c_volume: np.ndarray
+    :type bins: int
+    :rtype: (np.ndarray, np.ndarray)
+    :return: count, price
+    """
+    min_close = np.min(c_close)
+    max_close = np.max(c_close)
+    norm = 1.0 / (max_close - min_close)
+    sum_h = np.array([0.0] * bins)
+    for i in range(len(c_close)):
+        sum_h[int((c_close[i] - min_close) * bins * norm)] += c_volume[i] ** 2
+    count = np.sqrt(sum_h)
+    count /= np.linalg.norm(count)
+    return count, np.linspace(min_close, max_close, bins)
