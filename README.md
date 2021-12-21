@@ -2,21 +2,21 @@
 Financial Indicators speed up with Numba
 
 Indicators:
-- SMA
-- EMA
-- TRIX
-- RSI
-- Stochastic RSI
-- MACD
+- Simple Moving Average
+- Exponential Moving Average
+- Triple Exponential Moving Avergage
+- Relative Strengh Index
+- Stochastic Relative Strengh Index
+- Moving Average Convergence Divergence
 - Bollinger Bands
-- Ichimoku Cloud
+- Ichimoku
 - Heinken Ashi
 - Volume Profile
 
 Requirements:
 ```python
-pip install numpy
 pip install numba
+pip install numpy
 ```
 
 Example :
