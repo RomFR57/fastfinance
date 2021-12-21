@@ -154,6 +154,7 @@ def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
     """
     bb_up = np.array([np.nan] * len(data))
     bb_down = np.array([np.nan] * len(data))
+    bb_width = np.array([np.nan] * len(data))
     bb_mid = sma(data, period)
     for i in range(period - 1, len(data)):
         std_dev = np.std(data[i - period + 1:i + 1])
