@@ -35,9 +35,11 @@ def sma(data, period):
     :type period: int
     :rtype: np.ndarray
     """
-    out = np.cumsum(data) / period
-    out[period:] = out[period:] - out[:-period]
-    out[:period - 1] = np.nan
+    size = len(data)
+    out = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        window = data[i - period + 1:i + 1]
+        out[i] = np.mean(window)
     return out
 
 
@@ -103,6 +105,23 @@ def macd(data, fast, slow, smoothing=2.0):
 
 
 @jit(nopython=True, cache=True)
+def stochastic(data, period_k, period_d):
+    """
+    Stochastic
+    :type data: np.ndarray
+    :type period_k: int
+    :type period_d: int
+    :rtype: (np.ndarray, np.ndarray)
+    """
+    size = len(data)
+    k = np.array([np.nan] * size)
+    for i in range(period_k - 1, size):
+        window = data[i - period_k + 1:i + 1]
+        k[i] = ((data[i] - np.min(window)) / (np.max(window) - np.min(window))) * 100
+    return k, sma(k, period_d)
+
+
+@jit(nopython=True, cache=True)
 def rsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
     """
     Relative Strengh Index
@@ -150,12 +169,14 @@ def srsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
     :rtype: np.ndarray
     """
     r = rsi(data, period, f_sma, f_clip, f_abs)[period:]
-    out = np.array([100 * ((r[i] - np.min(r[i + 1 - period:i + 1])) / (np.max(r[i + 1 - period:i + 1]) - np.min(
-        r[i + 1 - period:i + 1]))) for i in range(period - 1, len(r))])
-    return np.concatenate((np.array([np.nan] * (len(data) - len(out))), out))
+    s = np.array([np.nan] * len(r))
+    for i in range(period - 1, len(r)):
+        window = r[i + 1 - period:i + 1]
+        s[i] = 100 * ((r[i] - np.min(window)) / (np.max(window) - np.min(window)))
+    return np.concatenate((np.array([np.nan] * (len(data) - len(s))), s))
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
     """
     Bollinger Bands
@@ -179,7 +200,7 @@ def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
     return bb_mid, bb_up, bb_down, bb_width
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def heiken_ashi(c_open, c_high, c_low, c_close):
     """
     Heiken Ashi
@@ -212,7 +233,8 @@ def max_plus_min_div_2(data, period, shift=0):
     size = len(data)
     calc = np.array([np.nan] * (size + shift))
     for i in range(period - 1, size):
-        calc[i + shift] = (np.max(data[i + 1 - period:i + 1]) + np.min(data[i + 1 - period:i + 1])) / 2
+        window = data[i + 1 - period:i + 1]
+        calc[i + shift] = (np.max(window) + np.min(window)) / 2
     return calc
 
 
