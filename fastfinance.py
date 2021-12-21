@@ -149,8 +149,8 @@ def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
     :type period: int
     :type dev_up: float
     :type dev_down: float
-    :rtype: (np.ndarray, np.ndarray, np.ndarray)
-    :return: middle, up, down
+    :rtype: (np.ndarray, np.ndarray, np.ndarray, np.ndarray)
+    :return: middle, up, down, width
     """
     bb_up = np.array([np.nan] * len(data))
     bb_down = np.array([np.nan] * len(data))
@@ -159,7 +159,8 @@ def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
         std_dev = np.std(data[i - period + 1:i + 1])
         bb_up[i] = bb_mid[i] + (std_dev * dev_up)
         bb_down[i] = bb_mid[i] - (std_dev * dev_down)
-    return bb_mid, bb_up, bb_down
+        bb_width[i] = (bb_up[i] - bb_down[i]) / bb_mid[i]
+    return bb_mid, bb_up, bb_down, bb_width
 
 
 @jit(nopython=True, cache=True)
