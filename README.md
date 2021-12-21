@@ -4,6 +4,7 @@
 Indicators :
 - Simple Moving Average (SMA)
 - Exponential Moving Average (EMA)
+- Double Exponential Moving Avergage (DEMA)
 - Triple Exponential Moving Avergage (TRIX)
 - Relative Strengh Index (RSI)
 - Stochastic Relative Strengh Index (S-RSI)
