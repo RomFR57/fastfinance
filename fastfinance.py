@@ -1,12 +1,20 @@
-import numpy as np
-from numba import jit, types
-from numba.extending import overload
-from numba.np import linalg
 from math import fabs
+
+import numpy as np
+from numba import jit
+from numba.extending import overload
 
 
 @overload(np.clip)
 def np_clip(a, a_min, a_max, out=None):
+    """
+    Numba Overload of np.clip
+    :type a: np.ndarray
+    :type a_min: int
+    :type a_max: int
+    :type out: np.ndarray
+    :rtype: np.ndarray
+    """
     if out is None:
         out = np.empty_like(a)
     for i in range(len(a)):
@@ -21,6 +29,12 @@ def np_clip(a, a_min, a_max, out=None):
 
 @jit(nopython=True, cache=True)
 def sma(data, period):
+    """
+    Simple Moving Average
+    :type data: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
     out = np.cumsum(data) / period
     out[period:] = out[period:] - out[:-period]
     out[:period - 1] = np.nan
@@ -28,7 +42,14 @@ def sma(data, period):
 
 
 @jit(nopython=True, cache=True)
-def ema(data, period, smoothing=2):
+def ema(data, period, smoothing=2.0):
+    """
+    Exponential Moving Average
+    :type data: np.ndarray
+    :type period: int
+    :type smoothing: float
+    :rtype: np.ndarray
+    """
     out = np.array([np.nan] * len(data))
     w = smoothing / (period + 1)
     for i in range(period - 1, len(data)):
@@ -43,18 +64,43 @@ def ema(data, period, smoothing=2):
 
 
 @jit(nopython=True, cache=True)
-def trix(data, period, smoothing=2):
+def trix(data, period, smoothing=2.0):
+    """
+    Triple Exponential Moving Average
+    :type data: np.ndarray
+    :type period: int
+    :type smoothing: float
+    :rtype: np.ndarray
+    """
     return ((3 * ema(data, period, smoothing) - (3 * ema(ema(data, period, smoothing), period, smoothing))) +
             ema(ema(ema(data, period, smoothing), period, smoothing), period, smoothing))
 
 
 @jit(nopython=True, cache=True)
-def macd(data, short, long, smoothing=2):
-    return ema(data, short, smoothing) - ema(data, long, smoothing)
+def macd(data, fast, slow, smoothing=2.0):
+    """
+    Moving Average Convergence Divergence
+    :type data: np.ndarray
+    :type fast: int
+    :type slow: int
+    :type smoothing: float
+    :rtype: np.ndarray
+    """
+    return ema(data, fast, smoothing) - ema(data, slow, smoothing)
 
 
 @jit(nopython=True, cache=True)
-def rsi(data, period, smoothing=2, f_sma=True, f_clip=True, f_abs=True):
+def rsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
+    """
+    Relative Strengh Index
+    :type data: np.ndarray
+    :type period: int
+    :type smoothing: float
+    :type f_sma: bool
+    :type f_clip: bool
+    :type f_abs: bool
+    :rtype: np.ndarray
+    """
     delta = np.array([np.nan] * len(data))
     up = np.array([np.nan] * len(data))
     down = np.array([np.nan] * len(data))
@@ -79,6 +125,16 @@ def rsi(data, period, smoothing=2, f_sma=True, f_clip=True, f_abs=True):
 
 @jit(nopython=True, cache=True)
 def srsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
+    """
+    Stochastic Relative Strengh Index
+    :type data: np.ndarray
+    :type period: int
+    :type smoothing: float
+    :type f_sma: bool
+    :type f_clip: bool
+    :type f_abs: bool
+    :rtype: np.ndarray
+    """
     r = rsi(data, period, f_sma, f_clip, f_abs)[period:]
     out = np.array([100 * ((r[i] - np.min(r[i + 1 - period:i + 1])) / (np.max(r[i + 1 - period:i + 1]) - np.min(
         r[i + 1 - period:i + 1]))) for i in range(period - 1, len(r))])
@@ -87,6 +143,15 @@ def srsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
 
 @jit(nopython=True, cache=True)
 def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
+    """
+    Bollinger Bands
+    :type data: np.ndarray
+    :type period: int
+    :type dev_up: float
+    :type dev_down: float
+    :rtype: (np.ndarray, np.ndarray, np.ndarray)
+    :return: middle, up, down
+    """
     bb_up = np.array([np.nan] * len(data))
     bb_down = np.array([np.nan] * len(data))
     bb_mid = sma(data, period)
@@ -99,6 +164,15 @@ def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
 
 @jit(nopython=True, cache=True)
 def heiken_ashi(c_open, c_high, c_low, c_close):
+    """
+    Heiken Ashi
+    :type c_open: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :type c_close: np.ndarray
+    :rtype: (np.ndarray, np.ndarray, np.ndarray, np.ndarray)
+    :return: open, high, low, close
+    """
     ha_close = (c_open + c_high + c_low + c_close) / 4
     ha_open = np.empty_like(ha_close)
     ha_open[0] = (c_open[0] + c_close[0]) / 2
@@ -110,7 +184,14 @@ def heiken_ashi(c_open, c_high, c_low, c_close):
 
 
 @jit(nopython=True, cache=True)
-def ichimoku_calc(data, period, shift=0):
+def max_plus_min_div_2(data, period, shift=0):
+    """
+    MAX + MIN / 2
+    :type data: np.ndarray
+    :type period: int
+    :type shift: int
+    :rtype np.ndarray
+    """
     size = len(data)
     calc = np.array([np.nan] * (size + shift))
     for i in range(period - 1, size):
@@ -120,10 +201,20 @@ def ichimoku_calc(data, period, shift=0):
 
 @jit(nopython=True, cache=True)
 def ichimoku(data, tenkansen=9, kinjunsen=26, senkou_b=52, shift=26):
+    """
+    Ichimoku
+    :type data: np.ndarray
+    :type tenkansen: int
+    :type kinjunsen: int
+    :type senkou_b: int
+    :type shift: int
+    :rtype: (np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray)
+    :return: tenkansen, kinjunsen, chikou, senkou a, senkou b
+    """
     size = len(data)
-    n_tenkansen = ichimoku_calc(data, tenkansen)
-    n_kinjunsen = ichimoku_calc(data, kinjunsen)
+    n_tenkansen = max_plus_min_div_2(data, tenkansen)
+    n_kinjunsen = max_plus_min_div_2(data, kinjunsen)
     n_chikou = np.concatenate(((data[shift:]), (np.array([np.nan] * (size - shift)))))
     n_senkou_a = np.concatenate((np.array([np.nan] * shift), ((n_tenkansen + n_kinjunsen) / 2)))
-    n_senkou_b = ichimoku_calc(data, senkou_b, shift)
+    n_senkou_b = max_plus_min_div_2(data, senkou_b, shift)
     return n_tenkansen, n_kinjunsen, n_chikou, n_senkou_a, n_senkou_b
