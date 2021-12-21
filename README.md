@@ -1,7 +1,7 @@
 # fastfinance
-Financial Indicators speed up with Numba
+**Financial Indicators speed up with Numba**
 
-Indicators:
+Indicators :
 - Simple Moving Average (SMA)
 - Exponential Moving Average (EMA)
 - Triple Exponential Moving Avergage (TRIX)
@@ -13,7 +13,11 @@ Indicators:
 - Heinken Ashi
 - Volume Profile
 
-Requirements:
+Requirements :
+- [Numba](https://github.com/numba/numba)
+- [Numpy](https://github.com/numpy/numpy)
+
+Install :
 ```python
 pip install numba
 pip install numpy
