@@ -65,6 +65,18 @@ def ema(data, period, smoothing=2.0):
 
 
 @jit(nopython=True, cache=True)
+def dema(data, period, smoothing=2.0):
+    """
+    Double Exponential Moving Average
+    :type data: np.ndarray
+    :type period: int
+    :type smoothing: float
+    :rtype: np.ndarray
+    """
+    return (2 * ema(data, period, smoothing)) - ema(ema(data, period, smoothing), period, smoothing)
+
+
+@jit(nopython=True, cache=True)
 def trix(data, period, smoothing=2.0):
     """
     Triple Exponential Moving Average
