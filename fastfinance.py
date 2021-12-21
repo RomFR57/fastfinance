@@ -50,9 +50,10 @@ def ema(data, period, smoothing=2.0):
     :type smoothing: float
     :rtype: np.ndarray
     """
-    out = np.array([np.nan] * len(data))
+    size = len(data)
+    out = np.array([np.nan] * size)
     w = smoothing / (period + 1)
-    for i in range(period - 1, len(data)):
+    for i in range(period - 1, size):
         window = data[i - period + 1:i + 1]
         top = window[period - 1]
         bottom = 1
