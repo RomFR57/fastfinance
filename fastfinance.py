@@ -101,9 +101,10 @@ def rsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
     :type f_abs: bool
     :rtype: np.ndarray
     """
-    delta = np.array([np.nan] * len(data))
-    up = np.array([np.nan] * len(data))
-    down = np.array([np.nan] * len(data))
+    size = len(data)
+    delta = np.array([np.nan] * size)
+    up = np.array([np.nan] * size)
+    down = np.array([np.nan] * size)
     delta = np.diff(data)
     if f_clip:
         up, down = np.clip(delta, a_min=0, a_max=np.max(delta)), np.clip(delta, a_min=np.min(delta), a_max=0)
@@ -118,7 +119,7 @@ def rsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
         down = np.abs(down)
     rs = sma(up, period) / sma(down, period) if f_sma else ema(up, period - 1, smoothing) / ema(
         down, period - 1, smoothing)
-    out = np.array([np.nan] * len(data))
+    out = np.array([np.nan] * size)
     out[1:] = (100 - 100 / (1 + rs))
     return out
 
@@ -152,11 +153,12 @@ def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
     :rtype: (np.ndarray, np.ndarray, np.ndarray, np.ndarray)
     :return: middle, up, down, width
     """
-    bb_up = np.array([np.nan] * len(data))
-    bb_down = np.array([np.nan] * len(data))
-    bb_width = np.array([np.nan] * len(data))
+    size = len(data)
+    bb_up = np.array([np.nan] * size)
+    bb_down = np.array([np.nan] * size)
+    bb_width = np.array([np.nan] * size)
     bb_mid = sma(data, period)
-    for i in range(period - 1, len(data)):
+    for i in range(period - 1, size):
         std_dev = np.std(data[i - period + 1:i + 1])
         bb_up[i] = bb_mid[i] + (std_dev * dev_up)
         bb_down[i] = bb_mid[i] - (std_dev * dev_down)
