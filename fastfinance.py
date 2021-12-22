@@ -28,6 +28,16 @@ def np_clip(a, a_min, a_max, out=None):
 
 
 @jit(nopython=True)
+def normalize(data):
+    """
+    Normalize
+    :type data: np.ndarray
+    :rtype: np.ndarray
+    """
+    return data / np.linalg.norm(data)
+
+
+@jit(nopython=True)
 def sma(data, period):
     """
     Simple Moving Average
@@ -275,6 +285,4 @@ def volume_profile(c_close, c_volume, bins=10):
     sum_h = np.array([0.0] * bins)
     for i in range(len(c_close)):
         sum_h[int((c_close[i] - min_close) * bins * norm)] += c_volume[i] ** 2
-    count = np.sqrt(sum_h)
-    count /= np.linalg.norm(count)
-    return count, np.linspace(min_close, max_close, bins)
+    return normalize(np.sqrt(sum_h)), np.linspace(min_close, max_close, bins)
