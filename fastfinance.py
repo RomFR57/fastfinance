@@ -27,7 +27,7 @@ def np_clip(a, a_min, a_max, out=None):
     return out
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def sma(data, period):
     """
     Simple Moving Average
@@ -43,7 +43,7 @@ def sma(data, period):
     return out
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def ema(data, period, smoothing=2.0):
     """
     Exponential Moving Average
@@ -66,7 +66,7 @@ def ema(data, period, smoothing=2.0):
     return out
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def dema(data, period, smoothing=2.0):
     """
     Double Exponential Moving Average
@@ -78,7 +78,7 @@ def dema(data, period, smoothing=2.0):
     return (2 * ema(data, period, smoothing)) - ema(ema(data, period, smoothing), period, smoothing)
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def trix(data, period, smoothing=2.0):
     """
     Triple Exponential Moving Average
@@ -91,7 +91,7 @@ def trix(data, period, smoothing=2.0):
             ema(ema(ema(data, period, smoothing), period, smoothing), period, smoothing))
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def macd(data, fast, slow, smoothing=2.0):
     """
     Moving Average Convergence Divergence
@@ -104,7 +104,7 @@ def macd(data, fast, slow, smoothing=2.0):
     return ema(data, fast, smoothing) - ema(data, slow, smoothing)
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def stochastic(data, period_k, period_d):
     """
     Stochastic
@@ -121,7 +121,7 @@ def stochastic(data, period_k, period_d):
     return k, sma(k, period_d)
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def rsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
     """
     Relative Strengh Index
@@ -156,7 +156,7 @@ def rsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
     return out
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def srsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
     """
     Stochastic Relative Strengh Index
@@ -221,7 +221,7 @@ def heiken_ashi(c_open, c_high, c_low, c_close):
     return ha_open, ha_high, ha_low, ha_close
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def max_plus_min_div_2(data, period, shift=0):
     """
     MAX + MIN / 2
@@ -238,7 +238,7 @@ def max_plus_min_div_2(data, period, shift=0):
     return calc
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def ichimoku(data, tenkansen=9, kinjunsen=26, senkou_b=52, shift=26):
     """
     Ichimoku
@@ -259,7 +259,7 @@ def ichimoku(data, tenkansen=9, kinjunsen=26, senkou_b=52, shift=26):
     return n_tenkansen, n_kinjunsen, n_chikou, n_senkou_a, n_senkou_b
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def volume_profile(c_close, c_volume, bins=10):
     """
     Volume Profile
