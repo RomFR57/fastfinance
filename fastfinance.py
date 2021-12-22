@@ -217,7 +217,7 @@ def heiken_ashi(c_open, c_high, c_low, c_close):
     for i in range(1, len(c_close)):
         ha_open[i] = (c_open[i - 1] + c_close[i - 1]) / 2
     ha_high = np.maximum(np.maximum(ha_open, ha_close), c_high)
-    ha_low = np.minimum(np.maximum(ha_open, ha_close), c_low)
+    ha_low = np.minimum(np.minimum(ha_open, ha_close), c_low)
     return ha_open, ha_high, ha_low, ha_close
 
 
