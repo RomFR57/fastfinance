@@ -7,7 +7,7 @@ Indicators :
 - Bollinger Bands
 - Double Exponential Moving Avergage
 - Exponential Moving Average
-- Heinken Ashi
+- Heiken Ashi
 - Ichimoku
 - KDJ
 - Moving Average Convergence Divergence
