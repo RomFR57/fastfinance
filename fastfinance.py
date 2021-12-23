@@ -115,7 +115,7 @@ def macd(data, fast, slow, smoothing=2.0):
 
 
 @jit(nopython=True)
-def stochastic(c_close, c_high, c_low, period_k, period_d):
+def stoch(c_close, c_high, c_low, period_k, period_d):
     """
     Stochastic
     :type c_close: np.ndarray
@@ -147,7 +147,7 @@ def kdj(c_close, c_high, c_low, period_k=3, period_d=3, weight_k=3, weight_d=2):
     :type weight_d: int
     :rtype: (np.ndarray, np.ndarray, np.ndarray)
     """
-    k, d = stochastic(c_close, c_high, c_low, period_k, period_d)
+    k, d = stoch(c_close, c_high, c_low, period_k, period_d)
     return k, d, (weight_k * k) - (weight_d * d)
 
 
@@ -309,7 +309,7 @@ def volume_profile(c_close, c_volume, bins=10):
 
 
 @jit(nopython=True)
-def true_range(c_open, c_high, c_low):
+def tr(c_open, c_high, c_low):
     """
     True Range
     :type c_open: np.ndarray
@@ -321,7 +321,7 @@ def true_range(c_open, c_high, c_low):
 
 
 @jit(nopython=True)
-def average_true_range(c_open, c_high, c_low, period):
+def atr(c_open, c_high, c_low, period):
     """
     Average True Range
     :type c_open: np.ndarray
@@ -330,4 +330,31 @@ def average_true_range(c_open, c_high, c_low, period):
     :type period: int
     :rtype: np.ndarray
     """
-    return sma(true_range(c_open, c_high, c_low), period)
+    return sma(tr(c_open, c_high, c_low), period)
+
+
+@jit(nopython=True)
+def adx(c_open, c_high, c_low, period_adx, period_dm):
+    """
+    Average Directionnal Index
+    :type c_open: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :type period_adx: int
+    :type period_dm: int
+    :rtype: np.ndarray
+    """
+    up = np.concatenate((np.array([np.nan]), c_high[1:] - c_high[:-1]))
+    down = np.concatenate((np.array([np.nan]), c_low[:-1] - c_low[1:]))
+    dm_up = np.array([0] * len(up))
+    up_ids = up > down
+    dm_up[up_ids] = up[up_ids]
+    dm_up[dm_up < 0] = 0
+    dm_down = np.array([0] * len(down))
+    down_ids = down > up
+    dm_down[down_ids] = down[down_ids]
+    dm_down[dm_down < 0] = 0
+    avg_tr = atr(c_open, c_high, c_low, period_dm)
+    dm_up_avg = 100 * ema(dm_up, period_dm) / avg_tr
+    dm_down_avg = 100 * ema(dm_down, period_dm) / avg_tr
+    return ema(100 * np.abs(dm_up_avg - dm_down_avg) / (dm_up_avg + dm_down_avg), period_adx)
