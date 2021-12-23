@@ -1,7 +1,11 @@
 # fastfinance
+
 **Financial Indicators speed up with Numba**
 
-Indicators :
+![alt text](https://imagizer.imageshack.com/img923/9808/uBE2M9.jpg)
+
+ 
+**Indicators :**
 - Average Directional Index
 - Avergage True Range
 - Bollinger Bands
@@ -19,17 +23,17 @@ Indicators :
 - True Range
 - Volume Profile
 
-Requirements :
+**Requirements :**
 - [Numba](https://github.com/numba/numba)
 - [Numpy](https://github.com/numpy/numpy)
 
-Install :
+**Install :**
 ```python
 pip install numba
 pip install numpy
 ```
 
-Example :
+**Example :**
 ```python
 import numpy as np
 import fastfinance as ff
