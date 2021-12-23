@@ -2,17 +2,20 @@
 **Financial Indicators speed up with Numba**
 
 Indicators :
-- Simple Moving Average (SMA)
-- Exponential Moving Average (EMA)
-- Double Exponential Moving Avergage (DEMA)
-- Triple Exponential Moving Avergage (TRIX)
-- Relative Strengh Index (RSI)
-- Stochastic Relative Strengh Index (S-RSI)
-- Stochastic
-- Moving Average Convergence Divergence (MACD)
+- Avergage True Range
 - Bollinger Bands
-- Ichimoku
+- Double Exponential Moving Avergage
+- Exponential Moving Average
 - Heinken Ashi
+- Ichimoku
+- KDJ
+- Moving Average Convergence Divergence
+- Relative Strengh Index
+- Simple Moving Average
+- Stochastic
+- Stochastic Relative Strengh Index
+- Triple Exponential Moving Avergage
+- True Range
 - Volume Profile
 
 Requirements :
