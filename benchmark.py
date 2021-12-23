@@ -1,5 +1,7 @@
 from time import time_ns
+
 import numpy as np
+
 import fastfinance as ff
 
 
@@ -20,8 +22,10 @@ def benchmark(data=None):
         ["TRIX", ff.trix, (data, size)],
         ["INIT", ff.macd, (init, 1, 1)],
         ["MACD", ff.macd, (data, size, size)],
-        ["INIT", ff.stochastic, (init, 2, 1)],
-        ["STOCHASTIC", ff.stochastic, (data, size, size)],
+        ["INIT", ff.stochastic, (init, init, init, 2, 1)],
+        ["STOCHASTIC", ff.stochastic, (data, data, data, size, size)],
+        ["INIT", ff.kdj, (init, init, init)],
+        ["KDJ", ff.kdj, (data, data, data)],
         ["INIT", ff.rsi, (init, 1)],
         ["RSI", ff.rsi, (data, size)],
         ["INIT", ff.srsi, (init, 5)],
@@ -34,6 +38,10 @@ def benchmark(data=None):
         ["ICHIMOKU", ff.ichimoku, [data]],
         ["INIT", ff.volume_profile, (init, init, 1)],
         ["VOLUME PROFILE", ff.volume_profile, (data, data, size)],
+        ["INIT", ff.true_range, (init, init, init)],
+        ["TRUE RANGE", ff.true_range, (data, data, data)],
+        ["INIT", ff.average_true_range, (init, init, init, 1)],
+        ["AVERAGE TRUE RANGE", ff.average_true_range, (data, data, data, size)],
     ]
     for i, p in enumerate(benchmark_list):
         if p[0] == "INIT":

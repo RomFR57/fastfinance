@@ -115,20 +115,40 @@ def macd(data, fast, slow, smoothing=2.0):
 
 
 @jit(nopython=True)
-def stochastic(data, period_k, period_d):
+def stochastic(c_close, c_high, c_low, period_k, period_d):
     """
     Stochastic
-    :type data: np.ndarray
+    :type c_close: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
     :type period_k: int
     :type period_d: int
     :rtype: (np.ndarray, np.ndarray)
     """
-    size = len(data)
+    size = len(c_close)
     k = np.array([np.nan] * size)
     for i in range(period_k - 1, size):
-        window = data[i - period_k + 1:i + 1]
-        k[i] = ((data[i] - np.min(window)) / (np.max(window) - np.min(window))) * 100
+        s = i - period_k + 1
+        e = i + 1
+        k[i] = ((c_close[i] - np.min(c_low[s:e])) / (np.max(c_high[s:e]) - np.min(c_low[s:e]))) * 100
     return k, sma(k, period_d)
+
+
+@jit(nopython=True)
+def kdj(c_close, c_high, c_low, period_k=3, period_d=3, weight_k=3, weight_d=2):
+    """
+    KDJ
+    :type c_close: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :type period_k: int
+    :type period_d: int
+    :type weight_k: int
+    :type weight_d: int
+    :rtype: (np.ndarray, np.ndarray, np.ndarray)
+    """
+    k, d = stochastic(c_close, c_high, c_low, period_k, period_d)
+    return k, d, (weight_k * k) - (weight_d * d)
 
 
 @jit(nopython=True)
@@ -286,3 +306,28 @@ def volume_profile(c_close, c_volume, bins=10):
     for i in range(len(c_close)):
         sum_h[int((c_close[i] - min_close) * bins * norm)] += c_volume[i] ** 2
     return normalize(np.sqrt(sum_h)), np.linspace(min_close, max_close, bins)
+
+
+@jit(nopython=True)
+def true_range(c_open, c_high, c_low):
+    """
+    True Range
+    :type c_open: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :rtype: np.ndarray
+    """
+    return np.maximum(np.maximum(c_open - c_low, np.abs(c_high - c_open)), np.abs(c_low - c_open))
+
+
+@jit(nopython=True)
+def average_true_range(c_open, c_high, c_low, period):
+    """
+    Average True Range
+    :type c_open: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
+    return sma(true_range(c_open, c_high, c_low), period)
