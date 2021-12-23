@@ -2,6 +2,7 @@
 **Financial Indicators speed up with Numba**
 
 Indicators :
+- Average Directional Index
 - Avergage True Range
 - Bollinger Bands
 - Double Exponential Moving Avergage
