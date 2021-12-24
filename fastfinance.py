@@ -1,8 +1,7 @@
 from math import fabs
 
 import numpy as np
-from numba import jit, njit, float64
-from numba.types import Array
+from numba import jit
 from numba.extending import overload
 
 
@@ -71,6 +70,20 @@ def sma(data, period):
         window = data[i - period + 1:i + 1]
         out[i] = np.mean(window)
     return out
+
+
+@jit(nopython=True)
+def wma(data, period):
+    """
+    Weighted Moving Average
+    :type data: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
+    weights = np.arange(period, 0, -1)
+    weights = weights / weights.sum()
+    out = convolve(data, weights)
+    return np.concatenate((np.array([np.nan] * (len(data) - len(out))), out))
 
 
 @jit(nopython=True)
