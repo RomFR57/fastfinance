@@ -1,7 +1,8 @@
 from math import fabs
 
 import numpy as np
-from numba import jit
+from numba import jit, njit, float64
+from numba.types import Array
 from numba.extending import overload
 
 
@@ -35,6 +36,25 @@ def normalize(data):
     :rtype: np.ndarray
     """
     return data / np.linalg.norm(data)
+
+
+@jit(nopython=True)
+def convolve(data, kernel):
+    """
+    Convolution 1D Array
+    :type data: np.ndarray
+    :type kernel: np.ndarray
+    :rtype: np.ndarray
+    """
+    size_data = len(data)
+    size_kernel = len(kernel)
+    size_out = size_data - size_kernel + 1
+    out = np.array([np.nan] * size_out)
+    kernel = np.flip(kernel)
+    for i in range(size_out):
+        window = data[i:i + size_kernel]
+        out[i] = sum([window[j] * kernel[j] for j in range(size_kernel)])
+    return out
 
 
 @jit(nopython=True)
@@ -74,6 +94,21 @@ def ema(data, period, smoothing=2.0):
             bottom += (1 - w) ** y
         out[i] = top / bottom
     return out
+
+
+@jit(nopython=True)
+def ewma(data, period, alpha=1.0):
+    """
+    Exponential Weighted Moving Average
+    :type data: np.ndarray
+    :type period: int
+    :type alpha: float
+    :rtype: np.ndarray
+    """
+    weights = (1 - alpha) ** np.arange(period)
+    weights /= np.sum(weights)
+    out = convolve(data, weights)
+    return np.concatenate((np.array([np.nan] * (len(data) - len(out))), out))
 
 
 @jit(nopython=True)

@@ -16,6 +16,8 @@ def benchmark(data=None):
         ["SMA", ff.sma, (data, size)],
         ["INIT", ff.ema, (init, 1)],
         ["EMA", ff.ema, (data, size)],
+        ["INIT", ff.ewma, (init, 1)],
+        ["EWMA", ff.ewma, (data, size)],
         ["INIT", ff.dema, (init, 1)],
         ["DEMA", ff.dema, (data, size)],
         ["INIT", ff.trix, (init, 1)],
