@@ -23,6 +23,7 @@
 - Triple Exponential Moving Avergage [ TRIX ]
 - True Range [ TR ]
 - Volume Profile
+- Weighted Moving Average [ WMA ]
 
 **Requirements :**
 - [Numba](https://github.com/numba/numba)
