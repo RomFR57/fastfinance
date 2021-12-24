@@ -9,6 +9,7 @@
 - Average Directional Index [ ADX ]
 - Avergage True Range [ ATR ]
 - Bollinger Bands
+- Cumulative Moving Avergage [ CMA ]
 - Double Exponential Moving Avergage [ DEMA ]
 - Exponential Moving Average [ EMA ]
 - Exponential Weighted Moving Average [ EWMA ]
