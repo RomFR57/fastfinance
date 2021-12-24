@@ -11,6 +11,7 @@
 - Bollinger Bands
 - Double Exponential Moving Avergage
 - Exponential Moving Average
+- Exponential Weighted Moving Average
 - Heiken Ashi
 - Ichimoku
 - KDJ
