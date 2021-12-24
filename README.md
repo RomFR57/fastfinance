@@ -6,22 +6,22 @@
 
  
 **Indicators :**
-- Average Directional Index
-- Avergage True Range
+- Average Directional Index ADX
+- Avergage True Range ATR
 - Bollinger Bands
-- Double Exponential Moving Avergage
-- Exponential Moving Average
-- Exponential Weighted Moving Average
+- Double Exponential Moving Avergage DEMA
+- Exponential Moving Average EMA
+- Exponential Weighted Moving Average EWMA
 - Heiken Ashi
 - Ichimoku
 - KDJ
-- Moving Average Convergence Divergence
-- Relative Strengh Index
-- Simple Moving Average
+- Moving Average Convergence Divergence MACD
+- Relative Strengh Index RSI
+- Simple Moving Average SMA
 - Stochastic
-- Stochastic Relative Strengh Index
-- Triple Exponential Moving Avergage
-- True Range
+- Stochastic Relative Strengh Index S-RSI
+- Triple Exponential Moving Avergage TRIX
+- True Range TR
 - Volume Profile
 
 **Requirements :**
