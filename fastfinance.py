@@ -87,6 +87,21 @@ def wma(data, period):
 
 
 @jit(nopython=True)
+def cma(data):
+    """
+    Cumulative Moving Average
+    :type data: np.ndarray
+    :rtype: np.ndarray
+    """
+    size = len(data)
+    out = np.array([np.nan] * size)
+    for i in range(1, size):
+        window = data[:i + 1]
+        out[i] = sum(window) / len(window)
+    return out
+
+
+@jit(nopython=True)
 def ema(data, period, smoothing=2.0):
     """
     Exponential Moving Average
