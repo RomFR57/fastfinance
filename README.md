@@ -39,9 +39,10 @@ pip install numpy
 import numpy as np
 import fastfinance as ff
 
-input = np.array([7, 8, 4, 1, 3, 2, 5, 9])
+data = np.array([2.9, 0.9, 1.9, 8.5, 0.1, 0.6, 1.9, 8.8], dtype=np.float64)
 
-output = ff.ema(data=imput, period=5)
-
-print(output)
+print(ff.ema(data=data, period=3))
+```
+```python
+[       nan        nan 1.75714286 5.52857143 2.75714286 1.58571429 1.27142857 5.65714286]
 ```
