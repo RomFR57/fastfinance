@@ -318,8 +318,28 @@ def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
         std_dev = np.std(data[i - period + 1:i + 1])
         bb_up[i] = bb_mid[i] + (std_dev * dev_up)
         bb_down[i] = bb_mid[i] - (std_dev * dev_down)
-        bb_width[i] = (bb_up[i] - bb_down[i]) / bb_mid[i]
+        bb_width[i] = bb_up[i] - bb_down[i]
     return bb_mid, bb_up, bb_down, bb_width
+
+
+@jit(nopython=True)
+def keltner_channel(c_close, c_open, c_high, c_low, period, smoothing=2.0):
+    """
+    Keltner Channel
+    :type c_close: np.ndarray
+    :type c_open: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :type period: int
+    :type smoothing: float
+    :rtype: (np.ndarray, np.ndarray, np.ndarray, np.ndarray)
+    :return: middle, up, down, width
+    """
+    e = ema(c_close, period, smoothing)
+    aa = 2 * atr(c_open, c_high, c_low, period)
+    up = e + aa
+    down = e - aa
+    return e, up, down, up - down
 
 
 @jit(nopython=True)
@@ -514,3 +534,4 @@ def aroon(data, period):
         out_up[i] = ((period - window.argmax()) / period) * 100
         out_down[i] = ((period - window.argmin()) / period) * 100
     return out_up, out_down
+
