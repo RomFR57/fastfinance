@@ -1,11 +1,12 @@
 # fastfinance
 
-**Financial Indicators speed up with Numba**
+### **Financial Indicators speed up with Numba**
 
-![alt text](https://imagizer.imageshack.com/img923/9808/uBE2M9.jpg)
-
+<p align="center">
+  <img src="https://imagizer.imageshack.com/img923/9808/uBE2M9.jpg" />
+</p>
  
-**Indicators :**
+### **Indicators :**
 - Average Directional Index [ ADX ]
 - Avergage True Range [ ATR ]
 - Bollinger Bands
@@ -26,17 +27,17 @@
 - Volume Profile
 - Weighted Moving Average [ WMA ]
 
-**Requirements :**
+### **Requirements :**
 - [Numba](https://github.com/numba/numba)
 - [Numpy](https://github.com/numpy/numpy)
 
-**Install :**
+### **Install :**
 ```python
 pip install numba
 pip install numpy
 ```
 
-**Example :**
+### **Example :**
 ```python
 import numpy as np
 import fastfinance as ff
@@ -48,3 +49,4 @@ print(ff.ema(data=data, period=3))
 ```python
 [       nan        nan 1.75714286 5.52857143 2.75714286 1.58571429 1.27142857 5.65714286]
 ```
+<h2 align="center">Thanks for ⭐ support !</h2>
