@@ -17,8 +17,10 @@
 - Heiken Ashi
 - Ichimoku
 - KDJ
+- Momentum
 - Moving Average Convergence Divergence [ MACD ]
 - On Balance Volume [ OBV ]
+- Rate Of Change [ ROC ]
 - Relative Strengh Index [ RSI ]
 - Simple Moving Average [ SMA ]
 - Stochastic
