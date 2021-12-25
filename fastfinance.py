@@ -423,4 +423,4 @@ def adx(c_open, c_high, c_low, period_adx, period_dm, smoothing=2.0):
     avg_tr = atr(c_open, c_high, c_low, period_dm)
     dm_up_avg = 100 * ema(dm_up, period_dm, smoothing) / avg_tr
     dm_down_avg = 100 * ema(dm_down, period_dm, smoothing) / avg_tr
-    return ema(100 * np.abs(dm_up_avg - dm_down_avg) / (dm_up_avg + dm_down_avg), period_adx)
+    return ema(100 * np.abs(dm_up_avg - dm_down_avg) / (dm_up_avg + dm_down_avg), period_adx, smoothing)
