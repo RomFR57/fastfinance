@@ -18,6 +18,7 @@
 - Heiken Ashi
 - Ichimoku
 - KDJ
+- Keltner Channel
 - Momentum
 - Moving Average Convergence Divergence [ MACD ]
 - On Balance Volume [ OBV ]
