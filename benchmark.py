@@ -62,6 +62,8 @@ def benchmark(data=None):
         ["ROC", ff.momentum, (data, size)],
         ["INIT", ff.aroon, (init, 1)],
         ["AROON", ff.aroon, (data, size)],
+        ["INIT", ff.cmf, (init, init, init, init, 1)],
+        ["CMF", ff.cmf, (data, data, data, data, size)],
     ]
     for i, p in enumerate(benchmark_list):
         if p[0] == "INIT":

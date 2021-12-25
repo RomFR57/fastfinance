@@ -189,8 +189,8 @@ def stoch(c_close, c_high, c_low, period_k, period_d):
     size = len(c_close)
     k = np.array([np.nan] * size)
     for i in range(period_k - 1, size):
-        s = i - period_k + 1
         e = i + 1
+        s = e - period_k
         ml = np.min(c_low[s:e])
         k[i] = ((c_close[i] - ml) / (np.max(c_high[s:e]) - ml)) * 100
     return k, sma(k, period_d)
@@ -213,8 +213,8 @@ def kdj(c_close, c_high, c_low, period_rsv=9, period_k=3, period_d=3, weight_k=3
     size = len(c_close)
     rsv = np.array([np.nan] * size)
     for i in range(period_k - 1, size):
-        s = i - period_k + 1
         e = i + 1
+        s = e - period_k
         ml = np.min(c_low[s:e])
         rsv[i] = ((c_close[i] - ml) / (np.max(c_high[s:e]) - ml)) * 100
     k = sma(rsv, period_rsv)
@@ -235,8 +235,8 @@ def wpr(c_close, c_high, c_low, period):
     size = len(c_close)
     out = np.array([np.nan] * size)
     for i in range(period - 1, size):
-        s = i - period + 1
         e = i + 1
+        s = e - period
         mh = np.max(c_high[s:e])
         out[i] = ((mh - c_close[i]) / (mh - np.min(c_low[s:e]))) * -100
     return out
@@ -535,3 +535,26 @@ def aroon(data, period):
         out_down[i] = ((period - window.argmin()) / period) * 100
     return out_up, out_down
 
+
+@jit(nopython=True)
+def cmf(c_close, c_high, c_low, c_volume, period):
+    """
+    Chaikin Money Flow
+    :type c_close: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :type c_volume: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
+    size = len(c_close)
+    out = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        e = i + 1
+        s = e - period
+        w_close = c_close[s:e]
+        w_high = c_high[s:e]
+        w_low = c_low[s:e]
+        w_vol = c_volume[s:e]
+        out[i] = sum((((w_close - w_low) - (w_high - w_close)) / (w_high - w_low)) * w_vol) / sum(w_vol)
+    return out
