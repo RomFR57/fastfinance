@@ -464,3 +464,34 @@ def obv(c_close, c_volume):
         else:
             out[i] = out[i - 1]
     return out
+
+
+@jit(nopython=True)
+def momentum(data, period):
+    """
+    Momentum
+    :type data: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
+    size = len(data)
+    out = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        out[i] = data[i] - data[i - period + 1]
+    return out
+
+
+@jit(nopython=True)
+def roc(data, period):
+    """
+    Rate Of Change
+    :type data: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
+    size = len(data)
+    out = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        p = data[i - period + 1]
+        out[i] = ((data[i] - p) / p) * 100
+    return out
