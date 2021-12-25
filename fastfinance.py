@@ -113,16 +113,12 @@ def ema(data, period, smoothing=2.0):
     :rtype: np.ndarray
     """
     size = len(data)
+    weight = smoothing / (period + 1)
     out = np.array([np.nan] * size)
-    w = smoothing / (period + 1)
-    for i in range(period - 1, size):
-        window = data[i - period + 1:i + 1]
-        top = window[period - 1]
-        bottom = 1
-        for y in range(1, period):
-            top += ((1 - w) ** y) * window[period - 1 - y]
-            bottom += (1 - w) ** y
-        out[i] = top / bottom
+    out[0] = data[0]
+    for i in range(1, size):
+        out[i] = (data[i] * weight) + (out[i - 1] * (1 - weight))
+    out[:period - 1] = np.nan
     return out
 
 
