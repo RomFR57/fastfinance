@@ -95,9 +95,11 @@ def cma(data):
     """
     size = len(data)
     out = np.array([np.nan] * size)
-    for i in range(1, size):
-        window = data[:i + 1]
-        out[i] = sum(window) / len(window)
+    last_sum = np.array([np.nan] * size)
+    last_sum[1] = sum(data[:2])
+    for i in range(2, size):
+        last_sum[i] = last_sum[i - 1] + data[i]
+        out[i] = last_sum[i] / (i + 1)
     return out
 
 
