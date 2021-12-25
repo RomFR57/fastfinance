@@ -180,7 +180,7 @@ def macd(data, fast, slow, smoothing=2.0):
 
 
 @jit(nopython=True)
-def stoch(c_close, c_high, c_low, period_k, period_d):
+def stoch(c_close, c_high, c_low, period_k, period_d, ):
     """
     Stochastic
     :type c_close: np.ndarray
@@ -271,7 +271,7 @@ def srsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
     :type f_abs: bool
     :rtype: np.ndarray
     """
-    r = rsi(data, period, f_sma, f_clip, f_abs)[period:]
+    r = rsi(data, period, smoothing, f_sma, f_clip, f_abs)[period:]
     s = np.array([np.nan] * len(r))
     for i in range(period - 1, len(r)):
         window = r[i + 1 - period:i + 1]
@@ -325,23 +325,6 @@ def heiken_ashi(c_open, c_high, c_low, c_close):
 
 
 @jit(nopython=True)
-def max_plus_min_div_2(data, period, shift=0):
-    """
-    MAX + MIN / 2
-    :type data: np.ndarray
-    :type period: int
-    :type shift: int
-    :rtype np.ndarray
-    """
-    size = len(data)
-    calc = np.array([np.nan] * (size + shift))
-    for i in range(period - 1, size):
-        window = data[i + 1 - period:i + 1]
-        calc[i + shift] = (np.max(window) + np.min(window)) / 2
-    return calc
-
-
-@jit(nopython=True)
 def ichimoku(data, tenkansen=9, kinjunsen=26, senkou_b=52, shift=26):
     """
     Ichimoku
@@ -354,12 +337,21 @@ def ichimoku(data, tenkansen=9, kinjunsen=26, senkou_b=52, shift=26):
     :return: tenkansen, kinjunsen, chikou, senkou a, senkou b
     """
     size = len(data)
-    n_tenkansen = max_plus_min_div_2(data, tenkansen)
-    n_kinjunsen = max_plus_min_div_2(data, kinjunsen)
-    n_chikou = np.concatenate(((data[shift:]), (np.array([np.nan] * (size - shift)))))
-    n_senkou_a = np.concatenate((np.array([np.nan] * shift), ((n_tenkansen + n_kinjunsen) / 2)))
-    n_senkou_b = max_plus_min_div_2(data, senkou_b, shift)
-    return n_tenkansen, n_kinjunsen, n_chikou, n_senkou_a, n_senkou_b
+    n_tenkansen = np.array([np.nan] * size)
+    n_kinjunsen = np.array([np.nan] * size)
+    n_senkou_b = np.array([np.nan] * (size + shift))
+    for i in range(tenkansen - 1, size):
+        window = data[i + 1 - tenkansen:i + 1]
+        n_tenkansen[i] = (np.max(window) + np.min(window)) / 2
+    for i in range(kinjunsen - 1, size):
+        window = data[i + 1 - kinjunsen:i + 1]
+        n_kinjunsen[i] = (np.max(window) + np.min(window)) / 2
+    for i in range(senkou_b - 1, size):
+        window = data[i + 1 - senkou_b:i + 1]
+        n_senkou_b[i + shift] = (np.max(window) + np.min(window)) / 2
+    return \
+        n_tenkansen, n_kinjunsen, np.concatenate(((data[shift:]), (np.array([np.nan] * (size - shift))))), \
+        np.concatenate((np.array([np.nan] * shift), ((n_tenkansen + n_kinjunsen) / 2))), n_senkou_b
 
 
 @jit(nopython=True)
