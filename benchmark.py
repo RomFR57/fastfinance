@@ -52,6 +52,8 @@ def benchmark(data=None):
         ["ADX", ff.adx, (data, data, data, size, size)],
         ["INIT", ff.obv, (init, init)],
         ["OBV", ff.obv, (data, data)],
+        ["INIT", ff.wpr, (init, init, init, 2)],
+        ["WPR", ff.wpr, (data, data, data, size)]
     ]
     for i, p in enumerate(benchmark_list):
         if p[0] == "INIT":

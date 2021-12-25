@@ -191,7 +191,8 @@ def stoch(c_close, c_high, c_low, period_k, period_d):
     for i in range(period_k - 1, size):
         s = i - period_k + 1
         e = i + 1
-        k[i] = ((c_close[i] - np.min(c_low[s:e])) / (np.max(c_high[s:e]) - np.min(c_low[s:e]))) * 100
+        ml = np.min(c_low[s:e])
+        k[i] = ((c_close[i] - ml) / (np.max(c_high[s:e]) - ml)) * 100
     return k, sma(k, period_d)
 
 
@@ -214,10 +215,31 @@ def kdj(c_close, c_high, c_low, period_rsv=9, period_k=3, period_d=3, weight_k=3
     for i in range(period_k - 1, size):
         s = i - period_k + 1
         e = i + 1
-        rsv[i] = ((c_close[i] - np.min(c_low[s:e])) / (np.max(c_high[s:e]) - np.min(c_low[s:e]))) * 100
+        ml = np.min(c_low[s:e])
+        rsv[i] = ((c_close[i] - ml) / (np.max(c_high[s:e]) - ml)) * 100
     k = sma(rsv, period_rsv)
     d = sma(k, period_d)
     return k, d, (weight_k * k) - (weight_d * d)
+
+
+@jit(nopython=True)
+def wpr(c_close, c_high, c_low, period):
+    """
+    William %R
+    :type c_close: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :type period: int
+    :rtype: (np.ndarray, np.ndarray)
+    """
+    size = len(c_close)
+    out = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        s = i - period + 1
+        e = i + 1
+        mh = np.max(c_high[s:e])
+        out[i] = ((mh - c_close[i]) / (mh - np.min(c_low[s:e]))) * -100
+    return out
 
 
 @jit(nopython=True)
@@ -271,7 +293,8 @@ def srsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
     s = np.array([np.nan] * len(r))
     for i in range(period - 1, len(r)):
         window = r[i + 1 - period:i + 1]
-        s[i] = 100 * ((r[i] - np.min(window)) / (np.max(window) - np.min(window)))
+        mw = np.min(window)
+        s[i] = ((r[i] - mw) / (np.max(window) - mw)) * 100
     return np.concatenate((np.array([np.nan] * (len(data) - len(s))), s))
 
 
