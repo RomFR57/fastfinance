@@ -198,19 +198,27 @@ def stoch(c_close, c_high, c_low, period_k, period_d):
 
 
 @jit(nopython=True)
-def kdj(c_close, c_high, c_low, period_k=3, period_d=3, weight_k=3, weight_d=2):
+def kdj(c_close, c_high, c_low, period_rsv=9, period_k=3, period_d=3, weight_k=3, weight_d=2):
     """
     KDJ
     :type c_close: np.ndarray
     :type c_high: np.ndarray
     :type c_low: np.ndarray
+    :type period_rsv: int
     :type period_k: int
     :type period_d: int
     :type weight_k: int
     :type weight_d: int
     :rtype: (np.ndarray, np.ndarray, np.ndarray)
     """
-    k, d = stoch(c_close, c_high, c_low, period_k, period_d)
+    size = len(c_close)
+    rsv = np.array([np.nan] * size)
+    for i in range(period_k - 1, size):
+        s = i - period_k + 1
+        e = i + 1
+        rsv[i] = ((c_close[i] - np.min(c_low[s:e])) / (np.max(c_high[s:e]) - np.min(c_low[s:e]))) * 100
+    k = sma(rsv, period_rsv)
+    d = sma(k, period_d)
     return k, d, (weight_k * k) - (weight_d * d)
 
 
