@@ -180,7 +180,7 @@ def macd(data, fast, slow, smoothing=2.0):
 
 
 @jit(nopython=True)
-def stoch(c_close, c_high, c_low, period_k, period_d, ):
+def stoch(c_close, c_high, c_low, period_k, period_d):
     """
     Stochastic
     :type c_close: np.ndarray
@@ -399,7 +399,7 @@ def atr(c_open, c_high, c_low, period):
 
 
 @jit(nopython=True)
-def adx(c_open, c_high, c_low, period_adx, period_dm):
+def adx(c_open, c_high, c_low, period_adx, period_dm, smoothing=2.0):
     """
     Average Directionnal Index
     :type c_open: np.ndarray
@@ -407,6 +407,7 @@ def adx(c_open, c_high, c_low, period_adx, period_dm):
     :type c_low: np.ndarray
     :type period_adx: int
     :type period_dm: int
+    :type smoothing: float
     :rtype: np.ndarray
     """
     up = np.concatenate((np.array([np.nan]), c_high[1:] - c_high[:-1]))
@@ -420,6 +421,6 @@ def adx(c_open, c_high, c_low, period_adx, period_dm):
     dm_down[down_ids] = down[down_ids]
     dm_down[dm_down < 0] = 0
     avg_tr = atr(c_open, c_high, c_low, period_dm)
-    dm_up_avg = 100 * ema(dm_up, period_dm) / avg_tr
-    dm_down_avg = 100 * ema(dm_down, period_dm) / avg_tr
+    dm_up_avg = 100 * ema(dm_up, period_dm, smoothing) / avg_tr
+    dm_down_avg = 100 * ema(dm_down, period_dm, smoothing) / avg_tr
     return ema(100 * np.abs(dm_up_avg - dm_down_avg) / (dm_up_avg + dm_down_avg), period_adx)
