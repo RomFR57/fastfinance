@@ -420,3 +420,24 @@ def adx(c_open, c_high, c_low, period_adx, period_dm, smoothing=2.0):
     dm_up_avg = 100 * ema(dm_up, period_dm, smoothing) / avg_tr
     dm_down_avg = 100 * ema(dm_down, period_dm, smoothing) / avg_tr
     return ema(100 * np.abs(dm_up_avg - dm_down_avg) / (dm_up_avg + dm_down_avg), period_adx, smoothing)
+
+
+@jit(nopython=True)
+def obv(c_close, c_volume):
+    """
+    On Balance Volume
+    :type c_close: np.ndarray
+    :type c_volume: np.ndarray
+    :rtype: np.ndarray
+    """
+    size = len(c_close)
+    out = np.array([np.nan] * size)
+    out[0] = 1
+    for i in range(1, size):
+        if c_close[i] > c_close[i - 1]:
+            out[i] = out[i - 1] + c_volume[i]
+        elif c_close[i] < c_close[i - 1]:
+            out[i] = out[i - 1] - c_volume[i]
+        else:
+            out[i] = out[i - 1]
+    return out
