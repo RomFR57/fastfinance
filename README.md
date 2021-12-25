@@ -27,6 +27,7 @@
 - True Range [ TR ]
 - Volume Profile
 - Weighted Moving Average [ WMA ]
+- William %R
 
 ### **Requirements :**
 - [Numba](https://github.com/numba/numba)
