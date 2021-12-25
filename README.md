@@ -7,6 +7,7 @@
 </p>
  
 ### **Indicators :**
+- Aroon
 - Average Directional Index [ ADX ]
 - Avergage True Range [ ATR ]
 - Bollinger Bands
