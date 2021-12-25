@@ -11,6 +11,7 @@
 - Average Directional Index [ ADX ]
 - Avergage True Range [ ATR ]
 - Bollinger Bands
+- Chaikin Money Flow [ CMF ]
 - Cumulative Moving Avergage [ CMA ]
 - Double Exponential Moving Avergage [ DEMA ]
 - Exponential Moving Average [ EMA ]
