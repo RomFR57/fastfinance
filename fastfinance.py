@@ -495,3 +495,22 @@ def roc(data, period):
         p = data[i - period + 1]
         out[i] = ((data[i] - p) / p) * 100
     return out
+
+
+@jit(nopython=True)
+def aroon(data, period):
+    """
+    Aroon
+    :type data: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
+    size = len(data)
+    out_up = np.array([np.nan] * size)
+    out_down = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        window = data[i + 1 - period:i + 1]
+        window = window[::-1]
+        out_up[i] = ((period - window.argmax()) / period) * 100
+        out_down[i] = ((period - window.argmin()) / period) * 100
+    return out_up, out_down

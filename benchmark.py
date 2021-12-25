@@ -57,7 +57,9 @@ def benchmark(data=None):
         ["INIT", ff.momentum, (init, 1)],
         ["MOMENTUM", ff.momentum, (data, size)],
         ["INIT", ff.momentum, (init, 1)],
-        ["ROC", ff.momentum, (data, size)]
+        ["ROC", ff.momentum, (data, size)],
+        ["INIT", ff.aroon, (init, 1)],
+        ["AROON", ff.aroon, (data, size)],
     ]
     for i, p in enumerate(benchmark_list):
         if p[0] == "INIT":
