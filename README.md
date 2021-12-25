@@ -18,6 +18,7 @@
 - Ichimoku
 - KDJ
 - Moving Average Convergence Divergence [ MACD ]
+- On Balance Volume [ OBV ]
 - Relative Strengh Index [ RSI ]
 - Simple Moving Average [ SMA ]
 - Stochastic
@@ -47,4 +48,4 @@ data = np.array([2.9, 0.9, 1.9, 8.5, 0.1, 0.6, 1.9, 8.8], dtype=np.float64)
 print(ff.ema(data=data, period=3))
 ```
 
-<h2 align="center">Thanks for ⭐ support !</h2>
+<h3 align="center">Thanks for ⭐ support !</h3>
