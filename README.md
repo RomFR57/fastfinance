@@ -17,6 +17,7 @@
 - Double Exponential Moving Avergage [ DEMA ]
 - Exponential Moving Average [ EMA ]
 - Exponential Weighted Moving Average [ EWMA ]
+- Fractal Dimension Index [ FDI ]
 - Heiken Ashi
 - Ichimoku
 - KDJ
