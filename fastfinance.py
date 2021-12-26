@@ -593,8 +593,6 @@ def vix(c_close, c_low, period):
     size = len(c_close)
     out = np.array([np.nan] * size)
     for i in range(period - 1, size):
-        e = i + 1
-        s = e - period
-        hc = np.max(c_close[s:e])
+        hc = np.max(c_close[i + 1 - period:i + 1])
         out[i] = ((hc - c_low[i]) / hc) * 100
     return out
