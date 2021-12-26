@@ -1,6 +1,6 @@
 # fastfinance
 
-### **Financial Indicators speed up with Numba**
+### **Fast Financial Indicators speed up with Numba**
 
 <p align="center">
   <img src="https://imagizer.imageshack.com/img923/9808/uBE2M9.jpg" />
