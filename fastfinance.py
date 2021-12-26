@@ -422,7 +422,6 @@ def volume_profile(c_close, c_volume, bins=10):
     for i in range(len(c_close)):
         sum_h[int((c_close[i] - min_close) * bins * norm)] += c_volume[i] ** 2
     sq = np.sqrt(sum_h)
-    print(sum(sq / sum(sq)))
     return sq / sum(sq), np.linspace(min_close, max_close, bins)
 
 
@@ -613,3 +612,34 @@ def fdi(c_close, period):
                 pdiff = diff
         out[i] = (1 + (np.log(length) + np.log(2)) / np.log(2 * period)) if length > 0 else 0
     return out
+
+
+@jit(nopython=True)
+def entropy(c_close, c_volume, period, bins=2, base=2):
+    """
+    Entropy (Experimental)
+    :type c_close: np.ndarray
+    :type c_volume: np.ndarray
+    :type period: int
+    :type bins: int
+    :type base: float
+    :rtype: np.ndarray
+    """
+    size = len(c_close)
+    out = np.array([np.nan] * size)
+    sum_f = 0
+    for i in range(period - 1, size):
+        e = i + 1
+        s = e - period
+        close_w = c_close[s:e]
+        volume_w = c_volume[s:e]
+        min_w = np.min(close_w)
+        norm = 1.0 / (np.max(close_w) - min_w)
+        sum_h = np.array([0.0] * bins)
+        for j in range(period):
+            sum_h[int((close_w[j] - min_w) * bins * norm)] += volume_w[j] ** 2
+        count = np.sqrt(sum_h)
+        count = count[np.nonzero(count)]
+        out[i] = -sum(count * np.log(count) / np.log(base))
+        sum_f += out[i]
+    return -out / sum_f
