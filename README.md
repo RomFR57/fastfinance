@@ -15,6 +15,7 @@
 - Cumulative Moving Avergage [ CMA ]
 - Donchian channel
 - Double Exponential Moving Avergage [ DEMA ]
+- Entropy
 - Exponential Moving Average [ EMA ]
 - Exponential Weighted Moving Average [ EWMA ]
 - Fractal Dimension Index [ FDI ]
