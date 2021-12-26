@@ -596,3 +596,28 @@ def vix(c_close, c_low, period):
         hc = np.max(c_close[i + 1 - period:i + 1])
         out[i] = ((hc - c_low[i]) / hc) * 100
     return out
+
+
+@jit(nopython=True)
+def fdi(c_close, period):
+    """
+    Fractal Dimension Index
+    :type c_close: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
+    size = len(c_close)
+    out = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        window = c_close[i + 1 - period:i + 1]
+        pdiff = 0
+        length = 0
+        hc = np.max(window)
+        lc = np.min(window)
+        for j in (range(1, period - 1)):
+            if hc > lc:
+                diff = (window[-j] - lc) / (hc - lc)
+                length += np.sqrt(((diff - pdiff) + (1 / (period ** 2))) ** 2) if j > 1 else 0
+                pdiff = diff
+        out[i] = (1 + (np.log(length) + np.log(2)) / np.log(2 * period)) if length > 0 else 0
+    return out

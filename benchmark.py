@@ -68,6 +68,8 @@ def benchmark(data=None):
         ["CMF", ff.cmf, (data, data, data, data, size)],
         ["INIT", ff.vix, (init, init, 1)],
         ["VIX", ff.vix, (data, data, size)],
+        ["INIT", ff.fdi, (init, 1)],
+        ["FDI", ff.fdi, (data, size)],
     ]
     for i, p in enumerate(benchmark_list):
         if p[0] == "INIT":
