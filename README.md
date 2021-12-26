@@ -31,6 +31,7 @@
 - Stochastic Relative Strengh Index [ S-RSI ]
 - Triple Exponential Moving Avergage [ TRIX ]
 - True Range [ TR ]
+- Volatility Index [ VIX ]
 - Volume Profile
 - Weighted Moving Average [ WMA ]
 - William %R
