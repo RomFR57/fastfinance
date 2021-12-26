@@ -13,6 +13,7 @@
 - Bollinger Bands
 - Chaikin Money Flow [ CMF ]
 - Cumulative Moving Avergage [ CMA ]
+- Donchian channel
 - Double Exponential Moving Avergage [ DEMA ]
 - Exponential Moving Average [ EMA ]
 - Exponential Weighted Moving Average [ EWMA ]
