@@ -316,8 +316,9 @@ def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
     bb_mid = sma(data, period)
     for i in range(period - 1, size):
         std_dev = np.std(data[i - period + 1:i + 1])
-        bb_up[i] = bb_mid[i] + (std_dev * dev_up)
-        bb_down[i] = bb_mid[i] - (std_dev * dev_down)
+        mid = bb_mid[i]
+        bb_up[i] = mid + (std_dev * dev_up)
+        bb_down[i] = mid - (std_dev * dev_down)
         bb_width[i] = bb_up[i] - bb_down[i]
     return bb_mid, bb_up, bb_down, bb_width
 
@@ -577,4 +578,23 @@ def cmf(c_close, c_high, c_low, c_volume, period):
         w_low = c_low[s:e]
         w_vol = c_volume[s:e]
         out[i] = sum((((w_close - w_low) - (w_high - w_close)) / (w_high - w_low)) * w_vol) / sum(w_vol)
+    return out
+
+
+@jit(nopython=True)
+def vix(c_close, c_low, period):
+    """
+    Volatility Index
+    :type c_close: np.ndarray
+    :type c_low: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
+    size = len(c_close)
+    out = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        e = i + 1
+        s = e - period
+        hc = np.max(c_close[s:e])
+        out[i] = ((hc - c_low[i]) / hc) * 100
     return out

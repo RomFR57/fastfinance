@@ -66,6 +66,8 @@ def benchmark(data=None):
         ["AROON", ff.aroon, (data, size)],
         ["INIT", ff.cmf, (init, init, init, init, 1)],
         ["CMF", ff.cmf, (data, data, data, data, size)],
+        ["INIT", ff.vix, (init, init, 1)],
+        ["VIX", ff.vix, (data, data, size)],
     ]
     for i, p in enumerate(benchmark_list):
         if p[0] == "INIT":
