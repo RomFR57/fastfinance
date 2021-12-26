@@ -343,6 +343,27 @@ def keltner_channel(c_close, c_open, c_high, c_low, period, smoothing=2.0):
 
 
 @jit(nopython=True)
+def donchian_channel(c_high, c_low, period):
+    """
+    Donchian Channel
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :type period: int
+    :rtype: (np.ndarray, np.ndarray, np.ndarray)
+    :return: middle, up, down, width
+    """
+    size = len(c_high)
+    out_up = np.array([np.nan] * size)
+    out_down = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        e = i + 1
+        s = e - period
+        out_up[i] = np.max(c_high[s:e])
+        out_down[i] = np.min(c_low[s:e])
+    return (out_up + out_down) / 2, out_up, out_down, out_up - out_down
+
+
+@jit(nopython=True)
 def heiken_ashi(c_open, c_high, c_low, c_close):
     """
     Heiken Ashi
@@ -529,8 +550,7 @@ def aroon(data, period):
     out_up = np.array([np.nan] * size)
     out_down = np.array([np.nan] * size)
     for i in range(period - 1, size):
-        window = data[i + 1 - period:i + 1]
-        window = window[::-1]
+        window = np.flip(data[i + 1 - period:i + 1])
         out_up[i] = ((period - window.argmax()) / period) * 100
         out_down[i] = ((period - window.argmin()) / period) * 100
     return out_up, out_down

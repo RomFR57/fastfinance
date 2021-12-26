@@ -40,6 +40,8 @@ def benchmark(data=None):
         ["BOLLINGER BANDS", ff.bollinger_bands, (data, size)],
         ["INIT", ff.keltner_channel, (init, init, init, init, 1)],
         ["KELTNER CHANNEL", ff.keltner_channel, (data, data, data, data, size)],
+        ["INIT", ff.donchian_channel, (init, init, 1)],
+        ["DONCHIAN CHANNEL", ff.donchian_channel, (data, data, size)],
         ["INIT", ff.heiken_ashi, (init, init, init, init)],
         ["HEIKEN ASHI", ff.heiken_ashi, (data, data, data, data)],
         ["INIT", ff.ichimoku, (init, 1, 1, 1, 1)],
