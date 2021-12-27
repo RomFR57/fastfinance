@@ -13,7 +13,7 @@
 - Bollinger Bands
 - Chaikin Money Flow [ CMF ]
 - Chande Momentum Oscillator [ CMO ]
-- Cumulative Moving Avergage [ CMA ]
+- Cumulative Moving Average [ CMA ]
 - Donchian channel
 - Double Exponential Moving Average [ DEMA ]
 - Entropy
