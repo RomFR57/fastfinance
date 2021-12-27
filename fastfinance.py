@@ -340,7 +340,7 @@ def donchian_channel(c_high, c_low, period):
     :type c_high: np.ndarray
     :type c_low: np.ndarray
     :type period: int
-    :rtype: (np.ndarray, np.ndarray, np.ndarray)
+    :rtype: (np.ndarray, np.ndarray, np.ndarray, np.ndarray)
     :return: middle, up, down, width
     """
     size = len(c_high)
@@ -536,7 +536,7 @@ def aroon(data, period):
     Aroon
     :type data: np.ndarray
     :type period: int
-    :rtype: np.ndarray
+    :rtype: (np.ndarray, np.ndarray)
     """
     size = len(data)
     out_up = np.array([np.nan] * size)
