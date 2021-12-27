@@ -9,13 +9,13 @@
 ### **Indicators :**
 - Aroon
 - Average Directional Index [ ADX ]
-- Avergage True Range [ ATR ]
+- Average True Range [ ATR ]
 - Bollinger Bands
 - Chaikin Money Flow [ CMF ]
 - Chande Momentum Oscillator [ CMO ]
 - Cumulative Moving Avergage [ CMA ]
 - Donchian channel
-- Double Exponential Moving Avergage [ DEMA ]
+- Double Exponential Moving Average [ DEMA ]
 - Entropy
 - Exponential Moving Average [ EMA ]
 - Exponential Weighted Moving Average [ EWMA ]
@@ -32,7 +32,7 @@
 - Simple Moving Average [ SMA ]
 - Stochastic
 - Stochastic Relative Strengh Index [ S-RSI ]
-- Triple Exponential Moving Avergage [ TRIX ]
+- Triple Exponential Moving Average [ TRIX ]
 - True Range [ TR ]
 - Volatility Index [ VIX ]
 - Volume Profile
