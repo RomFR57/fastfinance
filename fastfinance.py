@@ -289,40 +289,6 @@ def srsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
 
 
 @jit(nopython=True)
-def cmo(c_close, period, f_sma=True, f_clip=True, f_abs=True):
-    """
-    Chande Momentum Oscillator
-    :type c_close: np.ndarray
-    :type period: int
-    :type f_sma: bool
-    :type f_clip: bool
-    :type f_abs: bool
-    :rtype: np.ndarray
-    """
-    size = len(c_close)
-    deltas = np.array([np.nan] * size)
-    sums_up = np.array([np.nan] * size)
-    sums_down = np.array([np.nan] * size)
-    for i in range(period - 1, size):
-        window = c_close[i + 1 - period:i + 1]
-        d = np.diff(window)
-        if f_clip:
-            up, down = np.clip(d, a_min=0, a_max=np.max(d)), np.clip(d, a_min=np.min(d), a_max=0)
-        else:
-            up, down = d.copy(), d.copy()
-            up[d < 0] = 0.0
-            down[d > 0] = 0.0
-        if f_abs:
-            for j, x in enumerate(down):
-                down[j] = fabs(x)
-        else:
-            down = np.abs(down)
-        sums_up[i] = sum(up)
-        sums_down[i] = sum(down)
-    return 100 * ((sums_up - sums_down) / (sums_up + sums_down))
-
-
-@jit(nopython=True)
 def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
     """
     Bollinger Bands
@@ -649,14 +615,13 @@ def fdi(c_close, period):
 
 
 @jit(nopython=True)
-def entropy(c_close, c_volume, period, bins=2, base=2):
+def entropy(c_close, c_volume, period, bins=2):
     """
     Entropy (Experimental)
     :type c_close: np.ndarray
     :type c_volume: np.ndarray
     :type period: int
     :type bins: int
-    :type base: float
     :rtype: np.ndarray
     """
     size = len(c_close)
@@ -673,7 +638,7 @@ def entropy(c_close, c_volume, period, bins=2, base=2):
         for j in range(period):
             sum_h[int((close_w[j] - min_w) * bins * norm)] += volume_w[j] ** 2
         count = np.sqrt(sum_h)
+        count = count / sum(count)
         count = count[np.nonzero(count)]
-        out[i] = -sum(count * np.log(count) / np.log(base))
-        sum_f += out[i]
-    return -out / sum_f
+        out[i] = -sum(count * np.log2(count))
+    return out
