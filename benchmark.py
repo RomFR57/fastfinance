@@ -36,6 +36,8 @@ def benchmark(data=None):
         ["RSI", ff.rsi, (data, size)],
         ["INIT", ff.srsi, (init, 5)],
         ["S-RSI", ff.srsi, (data, size)],
+        ["INIT", ff.chande_mo, (init, 2)],
+        ["CHANDE MO", ff.chande_mo, (data, size)],
         ["INIT", ff.bollinger_bands, (init, 1)],
         ["BOLLINGER BANDS", ff.bollinger_bands, (data, size)],
         ["INIT", ff.keltner_channel, (init, init, init, init, 1)],

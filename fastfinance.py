@@ -289,6 +289,40 @@ def srsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
 
 
 @jit(nopython=True)
+def chande_mo(c_close, period, f_sma=True, f_clip=True, f_abs=True):
+    """
+    Chande Momentum Oscillator
+    :type c_close: np.ndarray
+    :type period: int
+    :type f_sma: bool
+    :type f_clip: bool
+    :type f_abs: bool
+    :rtype: np.ndarray
+    """
+    size = len(c_close)
+    deltas = np.array([np.nan] * size)
+    sums_up = np.array([np.nan] * size)
+    sums_down = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        window = c_close[i + 1 - period:i + 1]
+        d = np.diff(window)
+        if f_clip:
+            up, down = np.clip(d, a_min=0, a_max=np.max(d)), np.clip(d, a_min=np.min(d), a_max=0)
+        else:
+            up, down = d.copy(), d.copy()
+            up[d < 0] = 0.0
+            down[d > 0] = 0.0
+        if f_abs:
+            for j, x in enumerate(down):
+                down[j] = fabs(x)
+        else:
+            down = np.abs(down)
+        sums_up[i] = sum(up)
+        sums_down[i] = sum(down)
+    return 100 * ((sums_up - sums_down) / (sums_up + sums_down))
+
+
+@jit(nopython=True)
 def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
     """
     Bollinger Bands
