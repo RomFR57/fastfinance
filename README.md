@@ -12,6 +12,7 @@
 - Avergage True Range [ ATR ]
 - Bollinger Bands
 - Chaikin Money Flow [ CMF ]
+- Chande Momentum Oscillator [ CMO ]
 - Cumulative Moving Avergage [ CMA ]
 - Donchian channel
 - Double Exponential Moving Avergage [ DEMA ]
