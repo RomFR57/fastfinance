@@ -289,7 +289,7 @@ def srsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
 
 
 @jit(nopython=True)
-def chande_mo(c_close, period, f_sma=True, f_clip=True, f_abs=True):
+def cmo(c_close, period, f_sma=True, f_clip=True, f_abs=True):
     """
     Chande Momentum Oscillator
     :type c_close: np.ndarray
