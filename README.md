@@ -27,6 +27,7 @@
 - Momentum
 - Moving Average Convergence Divergence [ MACD ]
 - On Balance Volume [ OBV ]
+- Polynomial Fit Extrapolation
 - Rate Of Change [ ROC ]
 - Relative Strengh Index [ RSI ]
 - Simple Moving Average [ SMA ]
