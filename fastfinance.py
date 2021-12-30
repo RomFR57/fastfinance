@@ -313,6 +313,40 @@ def srsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
 
 
 @jit(nopython=True)
+def cmo(c_close, period, f_sma=True, f_clip=True, f_abs=True):
+    """
+    Chande Momentum Oscillator
+    :type c_close: np.ndarray
+    :type period: int
+    :type f_sma: bool
+    :type f_clip: bool
+    :type f_abs: bool
+    :rtype: np.ndarray
+    """
+    size = len(c_close)
+    deltas = np.array([np.nan] * size)
+    sums_up = np.array([np.nan] * size)
+    sums_down = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        window = c_close[i + 1 - period:i + 1]
+        d = np.diff(window)
+        if f_clip:
+            up, down = np.clip(d, a_min=0, a_max=np.max(d)), np.clip(d, a_min=np.min(d), a_max=0)
+        else:
+            up, down = d.copy(), d.copy()
+            up[d < 0] = 0.0
+            down[d > 0] = 0.0
+        if f_abs:
+            for j, x in enumerate(down):
+                down[j] = fabs(x)
+        else:
+            down = np.abs(down)
+        sums_up[i] = sum(up)
+        sums_down[i] = sum(down)
+    return 100 * ((sums_up - sums_down) / (sums_up + sums_down))
+
+
+@jit(nopython=True)
 def bollinger_bands(data, period, dev_up=2.0, dev_down=2.0):
     """
     Bollinger Bands
@@ -666,3 +700,33 @@ def entropy(c_close, c_volume, period, bins=2):
         out[i] = -sum(count * np.log2(count))
     return out
 
+
+@jit(nopython=True)
+def poly_fit_extra(data, deg=1, extra=0):
+    """
+    Polynomial Fit Extrapolation
+
+    :type data: np.ndarray
+    :type deg: int
+    :type extra: int
+    :rtype: np.ndarray
+    """
+    size = len(data)
+    x = np.arange(0, size, 1)
+    m = np.ones((x.shape[0], deg + 1))
+    m[:, 1] = x
+    if deg > 1:
+        for n in range(2, deg + 1):
+            m[:, n] = m[:, n - 1] * x
+    scale = np.empty((deg + 1,))
+    for n in range(0, deg + 1):
+        norm = np.linalg.norm(m[:, n])
+        scale[n] = norm
+        m[:, n] /= norm
+    lsf = (np.linalg.lstsq(m, data, rcond=-1)[0] / scale)[::-1]
+    lx = np.arange(0, size + extra, 1)
+    out = np.zeros(lx.shape)
+    for i, v in enumerate(lsf):
+        out *= lx
+        out += v
+    return out
