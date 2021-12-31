@@ -67,7 +67,8 @@ def benchmark(data=None):
         ["VIX", ff.vix, (data, data, size)],
         ["FDI", ff.fdi, (data, size)],
         ["ENTROPY", ff.entropy, (data, data, size)],
-        ["POLY FIT EXTRA", ff.poly_fit_extra, (data, 10, size)]
+        ["POLY FIT EXTRA", ff.poly_fit_extra, (data, 10, size)],
+        ["FOURIER FIT EXTRA", ff.fourier_fit_extra, (data, 10, size)],
     ]
     for i, p in enumerate(benchmark_list):
         p[1](*p[2])
@@ -75,7 +76,3 @@ def benchmark(data=None):
         t = time_ns()
         p[1](*p[2])
         print("".join([p[0], " [", str(round((time_ns() - t) / 1000000)), " ms]"]))
-
-
-if __name__ == "__main__":
-    benchmark()
