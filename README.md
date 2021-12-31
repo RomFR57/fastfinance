@@ -19,6 +19,7 @@
 - Entropy
 - Exponential Moving Average [ EMA ]
 - Exponential Weighted Moving Average [ EWMA ]
+- Fourier Transform Fit Extrapolation
 - Fractal Dimension Index [ FDI ]
 - Heiken Ashi
 - Ichimoku
