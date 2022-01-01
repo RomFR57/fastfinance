@@ -731,7 +731,7 @@ def poly_fit_extra(data, deg=1, extra=0):
     return out
 
 
-@jit(nopython=True, cache=True)
+@jit(nopython=True)
 def fourier_fit_extra(data, harmonic, extra=0):
     """
     Fourier Transform Fit Extrapolation
@@ -769,3 +769,37 @@ def fourier_fit_extra(data, harmonic, extra=0):
     for i in index[:1 + harmonic * 2]:
         out += (abs(four[i]) / size) * np.cos(2 * np.pi * freq[i] * lx + np.angle(four[i]))
     return out + lsf[0] * lx
+
+
+@jit(nopython=True)
+def super_trend(c_close, c_open, c_high, c_low, period_atr=10, multi=3):
+    """
+    Supertrend
+    :type c_close: np.ndarray
+    :type c_open: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :type period_atr: int
+    :type multi: int
+    :rtype: np.ndarray
+    :return: up, down
+    """
+    size = len(c_close)
+    avg_tr = atr(c_open, c_high, c_low, period_atr)
+    hl2 = (c_high + c_low) / 2
+    b_up = hl2 + (multi * avg_tr)
+    b_down = hl2 - (multi * avg_tr)
+    st = np.array([np.nan] * size)
+    for i in range(1, size):
+        j = i - 1
+        if c_close[i] > b_up[j]:
+            st[i] = 1
+        elif c_close[i] < b_down[j]:
+            st[i] = 0
+        else:
+            st[i] = st[j]
+            if st[i] == 1 and b_down[i] < b_down[j]:
+                b_down[i] = b_down[j]
+            if st[i] == 0 and b_up[i] > b_up[j]:
+                b_up[i] = b_up[j]
+    return np.where(st == 1, b_down, np.nan), np.where(st == 0, b_up, np.nan)

@@ -58,6 +58,7 @@ def benchmark(data=None):
         ["TR", ff.tr, (data, data, data)],
         ["ATR", ff.atr, (data, data, data, size)],
         ["ADX", ff.adx, (data, data, data, size, size)],
+        ["SUPERTREND", ff.super_trend, (data, data, data, size)],
         ["OBV", ff.obv, (data, data)],
         ["WPR", ff.wpr, (data, data, data, size)],
         ["MOMENTUM", ff.momentum, (data, size)],
@@ -76,3 +77,7 @@ def benchmark(data=None):
         t = time_ns()
         p[1](*p[2])
         print("".join([p[0], " [", str(round((time_ns() - t) / 1000000)), " ms]"]))
+
+
+if __name__ == "__main__":
+    benchmark()
