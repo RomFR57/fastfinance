@@ -34,6 +34,7 @@
 - Simple Moving Average [ SMA ]
 - Stochastic
 - Stochastic Relative Strengh Index [ S-RSI ]
+- Supertrend
 - Triple Exponential Moving Average [ TRIX ]
 - True Range [ TR ]
 - Volatility Index [ VIX ]
