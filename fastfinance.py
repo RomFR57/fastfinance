@@ -846,6 +846,7 @@ def laplace_fit_extra(data, harmonic, extra=0):
     return out + lsf[0] * lx
 
 
+@jit(nopython=True)
 def chop(c_close, c_open, c_high, c_low, period=14):
     """
     Chopiness Index
