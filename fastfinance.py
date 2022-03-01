@@ -428,9 +428,9 @@ def heiken_ashi(c_open, c_high, c_low, c_close):
     ha_open[0] = (c_open[0] + c_close[0]) / 2
     for i in range(1, len(c_close)):
         ha_open[i] = (c_open[i - 1] + c_close[i - 1]) / 2
-    ha_high = np.maximum(np.maximum(ha_open, ha_close), c_high)
-    ha_low = np.minimum(np.minimum(ha_open, ha_close), c_low)
-    return ha_open, ha_high, ha_low, ha_close
+    return \
+        ha_open, np.maximum(np.maximum(ha_open, ha_close), c_high), np.minimum(np.minimum(ha_open, ha_close), c_low), \
+        ha_close
 
 
 @jit(nopython=True)
@@ -595,6 +595,7 @@ def aroon(data, period):
     :type data: np.ndarray
     :type period: int
     :rtype: (np.ndarray, np.ndarray)
+    :return: up, down
     """
     size = len(data)
     out_up = np.array([np.nan] * size)
@@ -781,7 +782,7 @@ def super_trend(c_close, c_open, c_high, c_low, period_atr=10, multi=3):
     :type c_low: np.ndarray
     :type period_atr: int
     :type multi: int
-    :rtype: np.ndarray
+    :rtype: (np.ndarray, np.ndarray)
     :return: up, down
     """
     size = len(c_close)
@@ -803,3 +804,63 @@ def super_trend(c_close, c_open, c_high, c_low, period_atr=10, multi=3):
             if st[i] == 0 and b_up[i] > b_up[j]:
                 b_up[i] = b_up[j]
     return np.where(st == 1, b_down, np.nan), np.where(st == 0, b_up, np.nan)
+
+
+@jit(nopython=True)
+def laplace_fit_extra(data, harmonic, extra=0):
+    """
+    Laplace Transform Fit Extrapolation
+    :type data: np.ndarray
+    :type harmonic: int
+    :type extra: int
+    :rtype: np.ndarray
+    """
+    size = len(data)
+    x = np.arange(0, size, 1)
+    m = np.ones((x.shape[0], 2))
+    m[:, 1] = x
+    scale = np.empty((2,))
+    for n in range(0, 2):
+        norm = np.linalg.norm(m[:, n])
+        scale[n] = norm
+        m[:, n] /= norm
+    lsf = (np.linalg.lstsq(m, data, rcond=-1)[0] / scale)[::-1]
+    lsd = data - lsf[0] * x
+    size_lsd = len(lsd)
+    four = np.zeros(size_lsd, dtype=np.complex128)
+    for i in range(size_lsd):
+        sum_f = 0
+        for n in range(size_lsd):
+            sum_f += lsd[n] * np.exp(-2j * np.pi * i * n * (1 / size_lsd))
+        four[i] = sum_f
+    freq = np.empty(size)
+    mi = (size - 1) // 2 + 1
+    freq[:mi] = np.arange(0, mi)
+    freq[mi:] = np.arange(-(size // 2), 0)
+    freq *= 1.0 / size
+    lx = np.arange(0, size + extra)
+    out = np.zeros(lx.shape)
+    index = [v for _, v in sorted([(np.absolute(four[v]), v) for v in list(range(size))])][::-1]
+    for i in index[:1 + harmonic * 2]:
+        out += (abs(four[i]) / size) * np.cos(2 * np.pi * freq[i] * lx + np.angle(four[i]))
+    return out + lsf[0] * lx
+
+
+def chop(c_close, c_open, c_high, c_low, period=14):
+    """
+    Chopiness Index
+    :type c_close: np.ndarray
+    :type c_open: np.ndarray
+    :type c_high: np.ndarray
+    :type c_low: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
+    size = len(c_close)
+    out = np.array([np.nan] * size)
+    a_tr = atr(c_open, c_high, c_low, period)
+    for i in range(period - 1, size):
+        e = i + 1
+        s = e - period
+        out[i] = (100 * np.log10(np.sum(a_tr[s:e]) / (np.max(c_high[s:e]) - np.min(c_low[s:e])))) / np.log10(period)
+    return out
