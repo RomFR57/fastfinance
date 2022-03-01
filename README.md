@@ -13,6 +13,7 @@
 - Bollinger Bands
 - Chaikin Money Flow [ CMF ]
 - Chande Momentum Oscillator [ CMO ]
+- Chopiness Index [ CHOP ]
 - Cumulative Moving Average [ CMA ]
 - Donchian channel
 - Double Exponential Moving Average [ DEMA ]
