@@ -807,46 +807,6 @@ def super_trend(c_close, c_open, c_high, c_low, period_atr=10, multi=3):
 
 
 @jit(nopython=True)
-def laplace_fit_extra(data, harmonic, extra=0):
-    """
-    Laplace Transform Fit Extrapolation
-    :type data: np.ndarray
-    :type harmonic: int
-    :type extra: int
-    :rtype: np.ndarray
-    """
-    size = len(data)
-    x = np.arange(0, size, 1)
-    m = np.ones((x.shape[0], 2))
-    m[:, 1] = x
-    scale = np.empty((2,))
-    for n in range(0, 2):
-        norm = np.linalg.norm(m[:, n])
-        scale[n] = norm
-        m[:, n] /= norm
-    lsf = (np.linalg.lstsq(m, data, rcond=-1)[0] / scale)[::-1]
-    lsd = data - lsf[0] * x
-    size_lsd = len(lsd)
-    four = np.zeros(size_lsd, dtype=np.complex128)
-    for i in range(size_lsd):
-        sum_f = 0
-        for n in range(size_lsd):
-            sum_f += lsd[n] * np.exp(-2j * np.pi * i * n * (1 / size_lsd))
-        four[i] = sum_f
-    freq = np.empty(size)
-    mi = (size - 1) // 2 + 1
-    freq[:mi] = np.arange(0, mi)
-    freq[mi:] = np.arange(-(size // 2), 0)
-    freq *= 1.0 / size
-    lx = np.arange(0, size + extra)
-    out = np.zeros(lx.shape)
-    index = [v for _, v in sorted([(np.absolute(four[v]), v) for v in list(range(size))])][::-1]
-    for i in index[:1 + harmonic * 2]:
-        out += (abs(four[i]) / size) * np.cos(2 * np.pi * freq[i] * lx + np.angle(four[i]))
-    return out + lsf[0] * lx
-
-
-@jit(nopython=True)
 def chop(c_close, c_open, c_high, c_low, period=14):
     """
     Chopiness Index
