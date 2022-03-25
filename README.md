@@ -5,7 +5,24 @@
 <p align="center">
   <img src="https://imagizer.imageshack.com/img923/9808/uBE2M9.jpg" />
 </p>
- 
+
+### **Story :**
+I'm a french former AI engineer and indie developer. I put my programmer career aside for few years to become a hospital nurse but french govemment don't allow me to work as a nurse anymore because I refused covid vaccine (I hope you respect my choice because I respect yours) whereas I was there for patients since the beginning of the pandemic. I had to ask my resignation but they keep me suspended and under contract from September 2021 until June 2022. It means that my salary is currently suspended and I'm not allow to fill another job until this date and nobody cares. I couldn't heal people anymore so I decided to come back to programming.
+
+In October 2021, I quickly learned Python to be able to use machine learning for image classification and also build an automated Binance trading bot as a way to pay my rent. Python is fun but slow and I wanted my bot to be able to plot financial indicators in real-time and use them for automatic strategies. I tried at first with built-in Python methods but it was impossible to get the refresh loop time below 1 sec. So I started to convert every financial indicators algorithms to fit Numba requirements and the problem was solved.
+
+I decided to share this library because it helped me a lot and I hope it could help someone which is in a bad situation.
+If you use the library and you make a lot of money with it, you should consider to help the ones who need the most.
+
+Now I'm making 3D games and animation controllers for Unity C#. I'm looking for Unity level design contributors for my game.
+
+If you are interested, feel free to contact me @ rom.fr57@gmail.com
+
+### **Example :**
+Automated trading bot using fastfinance for plot output, strategies and parameters tuning
+
+Link to Youtube > [Python Binance Trading Bot - Autotune with Bollinger Bands strategy](https://www.youtube.com/watch?v=L5t6aFAETcg)
+
 ### **Indicators :**
 - Aroon
 - Average Directional Index [ ADX ]
@@ -53,7 +70,7 @@ pip install numba
 pip install numpy
 ```
 
-### **Example :**
+### **Usage :**
 ```python
 import numpy as np
 import fastfinance as ff
