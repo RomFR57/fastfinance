@@ -71,6 +71,7 @@ def benchmark(data=None):
         ["POLY FIT EXTRA", ff.poly_fit_extra, (data, 10, size)],
         ["FOURIER FIT EXTRA", ff.fourier_fit_extra, (data, 10, size)],
         ["CHOP INDEX", ff.chop, (data, data, data, data, size)],
+        ["COG", ff.cog, (data, size)]
     ]
     for i, p in enumerate(benchmark_list):
         p[1](*p[2])

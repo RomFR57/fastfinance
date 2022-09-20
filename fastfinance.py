@@ -825,3 +825,25 @@ def chop(c_close, c_open, c_high, c_low, period=14):
         s = e - period
         out[i] = (100 * np.log10(np.sum(a_tr[s:e]) / (np.max(c_high[s:e]) - np.min(c_low[s:e])))) / np.log10(period)
     return out
+
+
+@jit(nopython=True)
+def cog(data, period=10):
+    """
+    Center Of Gravity
+    :type data: np.ndarray
+    :type period: int
+    :rtype: np.ndarray
+    """
+    size = len(data)
+    out = np.array([np.nan] * size)
+    for i in range(period - 1, size):
+        e = i + 1
+        s = e - period
+        window = data[s:e]
+        den = np.sum(window)
+        num = 0
+        for j in range(0, period):
+            num += window[j] * (period - j)
+        out[i] = - num / den
+    return out
