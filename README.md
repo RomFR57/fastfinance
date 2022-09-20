@@ -28,6 +28,7 @@ Link to Youtube > [Python Binance Trading Bot - Autotune with Bollinger Bands st
 - Average Directional Index [ ADX ]
 - Average True Range [ ATR ]
 - Bollinger Bands
+- Center Of Gravity [ COG ]
 - Chaikin Money Flow [ CMF ]
 - Chande Momentum Oscillator [ CMO ]
 - Chopiness Index [ CHOP ]
