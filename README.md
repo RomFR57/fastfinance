@@ -44,6 +44,7 @@ Link to Youtube > [Python Binance Trading Bot - Autotune with Bollinger Bands st
 - Ichimoku
 - KDJ
 - Keltner Channel
+- Least Squares Moving Average [ LSMA ]
 - Momentum
 - Moving Average Convergence Divergence [ MACD ]
 - On Balance Volume [ OBV ]
@@ -60,6 +61,7 @@ Link to Youtube > [Python Binance Trading Bot - Autotune with Bollinger Bands st
 - Volume Profile
 - Weighted Moving Average [ WMA ]
 - William %R
+- Zero-Lag Least Squares Moving Average [ ZLSMA ]
 
 ### **Requirements :**
 - [Numba](https://github.com/numba/numba)
