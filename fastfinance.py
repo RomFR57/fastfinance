@@ -79,7 +79,7 @@ def sma(data, period):
     :rtype: np.ndarray
     """
     size = len(data)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     for i in range(period - 1, size):
         window = data[i - period + 1:i + 1]
         out[i] = np.mean(window)
@@ -108,7 +108,7 @@ def cma(data):
     :rtype: np.ndarray
     """
     size = len(data)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     last_sum = np.array([np.nan] * size)
     last_sum[1] = sum(data[:2])
     for i in range(2, size):
@@ -128,7 +128,7 @@ def ema(data, period, smoothing=2.0):
     """
     size = len(data)
     weight = smoothing / (period + 1)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     out[0] = data[0]
     for i in range(1, size):
         out[i] = (data[i] * weight) + (out[i - 1] * (1 - weight))
@@ -247,7 +247,7 @@ def wpr(c_close, c_high, c_low, period):
     :rtype: (np.ndarray, np.ndarray)
     """
     size = len(c_close)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     for i in range(period - 1, size):
         e = i + 1
         s = e - period
@@ -286,7 +286,7 @@ def rsi(data, period, smoothing=2.0, f_sma=True, f_clip=True, f_abs=True):
         down = np.abs(down)
     rs = sma(up, period) / sma(down, period) if f_sma else ema(up, period - 1, smoothing) / ema(
         down, period - 1, smoothing)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     out[1:] = (100 - 100 / (1 + rs))
     return out
 
@@ -545,7 +545,7 @@ def obv(c_close, c_volume):
     :rtype: np.ndarray
     """
     size = len(c_close)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     out[0] = 1
     for i in range(1, size):
         if c_close[i] > c_close[i - 1]:
@@ -566,7 +566,7 @@ def momentum(data, period):
     :rtype: np.ndarray
     """
     size = len(data)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     for i in range(period - 1, size):
         out[i] = data[i] - data[i - period + 1]
     return out
@@ -581,7 +581,7 @@ def roc(data, period):
     :rtype: np.ndarray
     """
     size = len(data)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     for i in range(period - 1, size):
         p = data[i - period + 1]
         out[i] = ((data[i] - p) / p) * 100
@@ -619,7 +619,7 @@ def cmf(c_close, c_high, c_low, c_volume, period):
     :rtype: np.ndarray
     """
     size = len(c_close)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     for i in range(period - 1, size):
         e = i + 1
         s = e - period
@@ -641,7 +641,7 @@ def vix(c_close, c_low, period):
     :rtype: np.ndarray
     """
     size = len(c_close)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     for i in range(period - 1, size):
         hc = np.max(c_close[i + 1 - period:i + 1])
         out[i] = ((hc - c_low[i]) / hc) * 100
@@ -657,7 +657,7 @@ def fdi(c_close, period):
     :rtype: np.ndarray
     """
     size = len(c_close)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     for i in range(period - 1, size):
         window = c_close[i + 1 - period:i + 1]
         pdiff = 0
@@ -684,7 +684,7 @@ def entropy(c_close, c_volume, period, bins=2):
     :rtype: np.ndarray
     """
     size = len(c_close)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     for i in range(period - 1, size):
         e = i + 1
         s = e - period
@@ -818,7 +818,7 @@ def chop(c_close, c_open, c_high, c_low, period=14):
     :rtype: np.ndarray
     """
     size = len(c_close)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     a_tr = atr(c_open, c_high, c_low, period)
     for i in range(period - 1, size):
         e = i + 1
@@ -836,7 +836,7 @@ def cog(data, period=10):
     :rtype: np.ndarray
     """
     size = len(data)
-    out = np.array([np.nan] * size)
+    out = np.full(size, np.nan)
     for i in range(period - 1, size):
         e = i + 1
         s = e - period
@@ -847,3 +847,51 @@ def cog(data, period=10):
             num += window[j] * (period - j)
         out[i] = - num / den
     return out
+
+
+@jit(nopython=True)
+def lsma(data, period=14, regression=True):
+    """
+    Least Squares Moving Average
+    :type data: np.ndarray
+    :type period: int
+    :type regression: bool
+    :rtype: np.ndarray
+    """
+    size = len(data)
+    out = np.full(size, np.nan)
+    w = np.arange(1, period + 1, dtype=np.float64)
+    if regression:
+        for i in range(period - 1, size):
+            e = i + 1
+            s = e - period
+            intercept, slope = np.dot(np.linalg.pinv(np.vstack((np.ones(period), w)).T), data[s:e])
+            out[i] = slope * period + intercept
+    else:
+        for i in range(period - 1, size):
+            e = i + 1
+            s = e - period
+            out[i] = np.dot(data[s:e], w) / np.sum(w)
+    return out
+
+
+@jit(nopython=True)
+def zlsma(data, period=14, offset=0, regression=True):
+    """
+    Zero-Lag Least Squares Moving Average
+    :param data: np.ndarray
+    :param period: int
+    :param offset: int
+    :param regression: bool
+    :return: np.ndarray
+    """
+    size = len(data)
+    sum_w = np.sum(np.arange(1, period + 1, dtype=np.float64))
+    lsma_v = lsma(data, period, regression)
+    out = np.full(size, np.nan)
+    w = sum_w / (2 * np.sum(np.arange(1, period)))
+    for i in range(period - 1, size):
+        out[i] = lsma_v[i] + (data[i] - lsma_v[i]) * w
+    return out
+
+
