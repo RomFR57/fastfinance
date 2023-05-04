@@ -876,12 +876,11 @@ def lsma(data, period=14, regression=True):
 
 
 @jit(nopython=True)
-def zlsma(data, period=14, offset=0, regression=True):
+def zlsma(data, period=14, regression=True):
     """
     Zero-Lag Least Squares Moving Average
     :param data: np.ndarray
     :param period: int
-    :param offset: int
     :param regression: bool
     :return: np.ndarray
     """
