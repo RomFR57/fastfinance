@@ -73,7 +73,8 @@ def benchmark(data=None):
         ["CHOP INDEX", ff.chop, (data, data, data, data, size)],
         ["COG", ff.cog, (data, size)],
         ["LSMA", ff.lsma, (data, size)],
-        ["ZLSMA", ff.lsma, (data, size)]
+        ["ZLSMA", ff.lsma, (data, size)],
+        ["KAMA", ff.kama, (data,)]
     ]
     for i, p in enumerate(benchmark_list):
         p[1](*p[2])

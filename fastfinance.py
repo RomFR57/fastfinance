@@ -894,3 +894,36 @@ def zlsma(data, period=14, regression=True):
     return out
 
 
+def kama(data, period=10, fast=2, slow=30, smoothing=0.666):
+    """
+    Kaufman's Adaptive Moving Average
+    :type data: np.ndarray
+    :type period: int
+    :type fast: int
+    :type slow: int
+    :type smoothing: float
+    :rtype: np.ndarray
+    """
+    size = len(data)
+    out = np.full(size, np.nan)
+    er = np.full(size, np.nan)
+    sc = np.full(size, np.nan)
+    fc = np.full(size, np.nan)
+    c = np.abs(np.diff(data))
+    v = np.sum(c)
+    if v > 0:
+        er[period] = c[period] / v
+        for i in range(period + 1, size):
+            er[i] = (er[i - 1] * (period - 1) + c[i - 1]) / v
+    if np.isfinite(er).any():
+        f_sc = 2 / (fast + 1)
+        s_sc = 2 / (slow + 1)
+        sc[period] = er[period] * (f_sc - s_sc) + s_sc
+        for i in range(period + 1, size):
+            sc[i] = er[i] * (f_sc - s_sc) + s_sc + sc[i - 1] * (1 - smoothing)
+        out[period] = data[period]
+        fc[period] = out[period]
+        for i in range(period + 1, size):
+            out[i] = out[i - 1] + sc[i] * (data[i] - out[i - 1])
+            fc[i] = out[i - 1] + smoothing * (data[i] - out[i - 1])
+    return out
