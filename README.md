@@ -42,6 +42,7 @@ Link to Youtube > [Python Binance Trading Bot - Autotune with Bollinger Bands st
 - Fractal Dimension Index [ FDI ]
 - Heiken Ashi
 - Ichimoku
+- Kaufman's Adaptive Moving Average [ KAMA ]
 - KDJ
 - Keltner Channel
 - Least Squares Moving Average [ LSMA ]
