@@ -40,6 +40,7 @@ Link to Youtube > [Python Binance Trading Bot - Autotune with Bollinger Bands st
 - Exponential Weighted Moving Average [ EWMA ]
 - Fourier Transform Fit Extrapolation
 - Fractal Dimension Index [ FDI ]
+- Golden Ratio Moving Average [ GRMA ]
 - Heiken Ashi
 - Ichimoku
 - Kaufman's Adaptive Moving Average [ KAMA ]
