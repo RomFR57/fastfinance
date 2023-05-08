@@ -74,7 +74,8 @@ def benchmark(data=None):
         ["COG", ff.cog, (data, size)],
         ["LSMA", ff.lsma, (data, size)],
         ["ZLSMA", ff.lsma, (data, size)],
-        ["KAMA", ff.kama, (data,)]
+        ["KAMA", ff.kama, (data,)],
+        ["GRMA", ff.grma, (data, 10)]
     ]
     for i, p in enumerate(benchmark_list):
         p[1](*p[2])

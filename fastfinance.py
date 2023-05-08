@@ -927,3 +927,25 @@ def kama(data, period=10, fast=2, slow=30, smoothing=0.666):
             out[i] = out[i - 1] + sc[i] * (data[i] - out[i - 1])
             fc[i] = out[i - 1] + smoothing * (data[i] - out[i - 1])
     return out
+
+
+@jit(nopython=True)
+def grma(data, period):
+    """
+    Golden Ratio Moving Average
+    :param data: np.ndarray
+    :param period: int
+    :return: np.ndarray
+    """
+    size = len(data)
+    out = np.full(size, np.nan)
+    sr = np.sqrt(2)
+    alpha = (sr - 1) / (sr + 1)
+    for i in range(period - 1, size):
+        if i == period - 1:
+            out[i] = np.mean(data[:i + 1])
+        else:
+            t1 = alpha * (data[i] - out[i - 1])
+            t2 = (1 - alpha) * (data[i - 1] - out[i - 1])
+            out[i] = out[i - 1] + t1 + t2
+    return out
