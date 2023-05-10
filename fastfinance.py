@@ -894,6 +894,7 @@ def zlsma(data, period=14, regression=True):
     return out
 
 
+@jit(nopython=True)
 def kama(data, period=10, fast=2, slow=30, smoothing=0.666):
     """
     Kaufman's Adaptive Moving Average
